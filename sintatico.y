@@ -17,7 +17,11 @@ struct atributos
 	string tipo;
 };
 
-string types[4][50] = {"0"};
+string tipos[4][50] = {"0"};
+string tipos_int[50] = {"0"};
+string tipos_float[50] = {"0"};
+string tipos_char[50] = {"0"};
+string tipos_bool[50] = {"0"};
 int pos_i = 0;
 int pos_f = 0;
 int pos_b = 0;
@@ -88,11 +92,11 @@ E 			: E '+' E
 				if($1.tipo.compare("float") == 0 || $3.tipo.compare("float") == 0)
 				{
 					$$.tipo = "float";
-					types[1][pos_f] = $$.label;
+					tipos_float[pos_f] = $$.label;
 					pos_f++;
 				}else{
 					$$.tipo = "int";
-					types[0][pos_i] = $$.label;
+					tipos_int[pos_i] = $$.label;
 					pos_i++;
 				}
 				$$.traducao = $1.traducao + $3.traducao + "\t" + $$.label + 
@@ -102,7 +106,7 @@ E 			: E '+' E
 			{
 				$$.label = gentempcode();
 				$$.tipo = "int";
-				types[0][pos_i] = $$.label;
+				tipos_int[pos_i] = $$.label;
 				pos_i++;
 				$$.traducao = $1.traducao + $3.traducao + "\t" + $$.label + 
 					" = " + $1.label + " - " + $3.label + ";\n";
@@ -111,7 +115,7 @@ E 			: E '+' E
 			{
 				$$.label = gentempcode();
 				$$.tipo = "bool";
-				types[2][pos_b] = $$.label;
+				tipos_bool[pos_b] = $$.label;
 				pos_b++;
 				$$.traducao = $1.traducao + $3.traducao;
 				$$.traducao += "\t" + $$.label + " = " + $1.label + " && " + $3.label + ";\n";
@@ -120,7 +124,7 @@ E 			: E '+' E
 			{
 				$$.label = gentempcode();
 				$$.tipo = "bool";
-				types[2][pos_b] = $$.label;
+				tipos_bool[pos_b] = $$.label;
 				pos_b++;
 				$$.traducao = $1.traducao + $3.traducao;
 				$$.traducao += "\t" + $$.label + " = " + $1.label + " == " + $3.label + ";\n";
@@ -129,7 +133,7 @@ E 			: E '+' E
 			{
 				$$.label = gentempcode();
 				$$.tipo = "bool";
-				types[2][pos_b] = $$.label;
+				tipos_bool[pos_b] = $$.label;
 				pos_b++;
 				$$.traducao = $1.traducao + $3.traducao;
 				$$.traducao += "\t" + $$.label + " = " + $1.label + " <= " + $3.label + ";\n";
@@ -138,7 +142,7 @@ E 			: E '+' E
 			{
 				$$.label = gentempcode();
 				$$.tipo = "bool";
-				types[2][pos_b] = $$.label;
+				tipos_bool[pos_b] = $$.label;
 				pos_b++;
 				$$.traducao = $1.traducao + $3.traducao;
 				$$.traducao += "\t" + $$.label + " = " + $1.label + " >= " + $3.label + ";\n";
@@ -147,7 +151,7 @@ E 			: E '+' E
 			{
 				$$.label = gentempcode();
 				$$.tipo = "bool";
-				types[2][pos_b] = $$.label;
+				tipos_bool[pos_b] = $$.label;
 				pos_b += 1;
 				$$.traducao = $1.traducao + $3.traducao;
 				$$.traducao += "\t" + $$.label + " = " + $1.label + " != " + $3.label + ";\n";
@@ -158,25 +162,25 @@ E 			: E '+' E
 
 				if($3.tipo.compare("int") == 0)
 				{
-					types[0][pos_i] = $1.label;
+					tipos_int[pos_i] = $1.label;
 					pos_i++;
 				}
 				
 				if($3.tipo.compare("float") == 0)
 				{
-					types[1][pos_f] = $1.label;
+					tipos_float[pos_f] = $1.label;
 					pos_f++;
 				}
 
 				if($3.tipo.compare("bool") == 0)
 				{
-					types[2][pos_b] = $1.label;
+					tipos_bool[pos_b] = $1.label;
 					pos_b++;
 				}
 
 				if($3.tipo.compare("char") == 0)
 				{
-					types[3][pos_c] = $1.label;
+					tipos_char[pos_c] = $1.label;
 					pos_c++;
 				}
 
@@ -186,7 +190,7 @@ E 			: E '+' E
 			{
 				$$.label = gentempcode();
 				$$.tipo = "char";
-				types[3][pos_c] = $$.label;
+				tipos_char[pos_c] = $$.label;
 				pos_c++;
 				$$.traducao = "\t" + $$.label + " = " + "'" + $2.label + "'" + ";\n";
 			}
@@ -194,7 +198,7 @@ E 			: E '+' E
 			{
 				$$.label = gentempcode();
 				$$.tipo = "int";
-				types[0][pos_i] = $$.label;
+				tipos_int[pos_i] = $$.label;
 				pos_i++;
 				$$.traducao = "\t" + $$.label + " = " + $1.label + ";\n";
 			}
@@ -202,7 +206,7 @@ E 			: E '+' E
 			{
 				$$.label = gentempcode();
 				$$.tipo = "float";
-				types[1][pos_f] = $$.label;
+				tipos_float[pos_f] = $$.label;
 				pos_f++;
 				$$.traducao = "\t" + $$.label + " = " + $1.label + "." + $3.label + ";\n";
 			}
@@ -237,61 +241,58 @@ int main(int argc, char* argv[])
 
 string print()
 {
-	string codigo = "\t";
+	string codigo;
 	for(int i = 0; i<4;i++)
 	{
-		if(i == 0)
+		if(i == 0 && tipos_int[0] != "0")
 		{ 
-			codigo +=  "int";
+			codigo +=  "\tint";
 			for(int j = 0; j<pos_i ; j++)
 			{
 				if(j == pos_i - 1)
 				{
-					codigo +=  " " + types[i][j] + " = 0";
+					codigo +=  " " + tipos_int[j] + ";\n";
 				}else{
-					codigo +=  " " + types[i][j] + " = 0,";
+					codigo +=  " " + tipos_int[j] + ",";
 				}
 			}
-		}else if(i == 1)
+		}else if(i == 1 && tipos_float[0] != "0")
 		{ 
 			codigo +=  "\tfloat";
 			for(int j = 0; j<pos_f ; j++)
 			{
 				if(j == pos_f - 1)
 				{
-					codigo +=  " " + types[i][j] + " = 0.0";
+					codigo +=  " " + tipos_float[j] + ";\n";
 				}else{
-					codigo +=  " " + types[i][j] + " = 0.0,";
+					codigo +=  " " + tipos_float[j] + ",";
 				}
 			}
-		}else if(i == 2)
+		}else if(i == 2 && tipos_bool[0] != "0")
 		{ 
 			codigo +=  "\tbool";
 			for(int j = 0; j<pos_b ; j++)
 			{
 				if(j == pos_b - 1)
 				{
-					codigo +=  " " + types[i][j] + " = true";
+					codigo +=  " " + tipos_bool[j] + ";\n";
 				}else{
-					codigo +=  " " + types[i][j] + " = true,";
+					codigo +=  " " + tipos_bool[j] + ",";
 				}
 			}
-		}else if(i == 3)
+		}else if(i == 3 && tipos_char[0] != "0")
 		{ 
 			codigo +=  "\tchar";
 			for(int j = 0; j<pos_c ; j++)
 			{
 				if(j == pos_c - 1)
 				{
-					codigo +=  " " + types[i][j] + " = ' '";
+					codigo +=  " " + tipos_char[j] + ";\n";
 				}else{
-					codigo +=  " " + types[i][j] + " = ' ',";
+					codigo +=  " " + tipos_char[j] + ",";
 				}
 			}
 		}
-							
-
-		codigo += ";\n";
 	}
 	return codigo;
 }
