@@ -37,6 +37,8 @@ ID {LETRA}({LETRA}|{NUM})*
 "!="        { return TK_DIFERENT; }
 
 "&&"        { return TK_ELOG; }
+"||"        { return TK_OR; }
+"!"         { return TK_NEGATIVE; }
 
 
 {NUM}		{ yylval.label = yytext; return TK_NUM; }
