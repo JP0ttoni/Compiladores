@@ -1,14 +1,15 @@
 SCANNER := lex
-SCANNER_PARAMS := lexico.l
+SCANNER_PARAMS := -o output/lex.yy.c src/lexico.l 
 PARSER := yacc
-PARSER_PARAMS := -d sintatico.y
+PARSER_PARAMS := -d src/sintatico.y -o output/y.tab.c -Wcounterexamples -v
 
 all: compile translate
 
 compile:
+		mkdir -p output
 		$(SCANNER) $(SCANNER_PARAMS)
 		$(PARSER) $(PARSER_PARAMS)
-		g++ -o glf y.tab.c -ll
+		g++ -o glf output/y.tab.c -ll
 
 run: 	glf
 		clear
@@ -19,10 +20,7 @@ debug:	PARSER_PARAMS += -Wcounterexamples
 debug: 	all
 
 translate: glf
-		./glf < exemplo.jsm
+		./glf < examples/exemplo.jsm
 
 clean:
-	rm y.tab.c
-	rm y.tab.h
-	rm lex.yy.c
-	rm glf
+	rm -rf output

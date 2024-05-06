@@ -35,8 +35,8 @@
    especially those whose name start with YY_ or yy_.  They are
    private implementation details that can be changed or removed.  */
 
-#ifndef YY_YY_Y_TAB_H_INCLUDED
-# define YY_YY_Y_TAB_H_INCLUDED
+#ifndef YY_YY_OUTPUT_Y_TAB_H_INCLUDED
+# define YY_YY_OUTPUT_Y_TAB_H_INCLUDED
 /* Debug traces.  */
 #ifndef YYDEBUG
 # define YYDEBUG 0
@@ -55,19 +55,21 @@ extern int yydebug;
     YYerror = 256,                 /* error  */
     YYUNDEF = 257,                 /* "invalid token"  */
     TK_NUM = 258,                  /* TK_NUM  */
-    TK_MAIN = 259,                 /* TK_MAIN  */
-    TK_ID = 260,                   /* TK_ID  */
-    TK_TIPO_INT = 261,             /* TK_TIPO_INT  */
-    TK_FIM = 262,                  /* TK_FIM  */
-    TK_ERROR = 263,                /* TK_ERROR  */
-    TK_ELOG = 264,                 /* TK_ELOG  */
-    TK_EQUAL = 265,                /* TK_EQUAL  */
-    TK_DIFERENT = 266,             /* TK_DIFERENT  */
-    TK_MAIOR_IGUAL = 267,          /* TK_MAIOR_IGUAL  */
-    TK_MENOR_IGUAL = 268,          /* TK_MENOR_IGUAL  */
-    TK_ASPA = 269,                 /* TK_ASPA  */
-    TK_NEGATIVE = 270,             /* TK_NEGATIVE  */
-    TK_OR = 271                    /* TK_OR  */
+    EOL = 259,                     /* EOL  */
+    TK_MINUS_MINUS = 260,          /* TK_MINUS_MINUS  */
+    TK_MAIN = 261,                 /* TK_MAIN  */
+    TK_ID = 262,                   /* TK_ID  */
+    TK_TIPO_INT = 263,             /* TK_TIPO_INT  */
+    TK_FIM = 264,                  /* TK_FIM  */
+    TK_ERROR = 265,                /* TK_ERROR  */
+    TK_ELOG = 266,                 /* TK_ELOG  */
+    TK_EQUAL = 267,                /* TK_EQUAL  */
+    TK_DIFERENT = 268,             /* TK_DIFERENT  */
+    TK_MAIOR_IGUAL = 269,          /* TK_MAIOR_IGUAL  */
+    TK_MENOR_IGUAL = 270,          /* TK_MENOR_IGUAL  */
+    TK_ASPA = 271,                 /* TK_ASPA  */
+    TK_NEGATIVE = 272,             /* TK_NEGATIVE  */
+    TK_OR = 273                    /* TK_OR  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -77,19 +79,21 @@ extern int yydebug;
 #define YYerror 256
 #define YYUNDEF 257
 #define TK_NUM 258
-#define TK_MAIN 259
-#define TK_ID 260
-#define TK_TIPO_INT 261
-#define TK_FIM 262
-#define TK_ERROR 263
-#define TK_ELOG 264
-#define TK_EQUAL 265
-#define TK_DIFERENT 266
-#define TK_MAIOR_IGUAL 267
-#define TK_MENOR_IGUAL 268
-#define TK_ASPA 269
-#define TK_NEGATIVE 270
-#define TK_OR 271
+#define EOL 259
+#define TK_MINUS_MINUS 260
+#define TK_MAIN 261
+#define TK_ID 262
+#define TK_TIPO_INT 263
+#define TK_FIM 264
+#define TK_ERROR 265
+#define TK_ELOG 266
+#define TK_EQUAL 267
+#define TK_DIFERENT 268
+#define TK_MAIOR_IGUAL 269
+#define TK_MENOR_IGUAL 270
+#define TK_ASPA 271
+#define TK_NEGATIVE 272
+#define TK_OR 273
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -105,4 +109,4 @@ extern YYSTYPE yylval;
 int yyparse (void);
 
 
-#endif /* !YY_YY_Y_TAB_H_INCLUDED  */
+#endif /* !YY_YY_OUTPUT_Y_TAB_H_INCLUDED  */
