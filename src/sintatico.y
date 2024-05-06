@@ -39,8 +39,9 @@ TERM : UNARY { $$.traducao = $1.traducao; }
 
 UNARY : FACTOR { $$.traducao = $1.traducao; }
 
-
-FACTOR : TK_NUM { $$.traducao = "PUSH " + $1.label + "\n"; }
+FACTOR : TK_NUM {
+	string label = gerarTemporaria();
+}
 
 %%
 
