@@ -16,32 +16,102 @@ int yylex(void);
 
 %start S
 
-%left '-' '+'
-%left '*' '/'
-
 %%
 
-S : COMMANDS { cout << $1.traducao; } 
+S : COMANDOS { iniciarCompilador($1.traducao); } 
 
-COMMANDS: COMMAND COMMANDS { $$.traducao = $1.traducao + $2.traducao; }
-	| '{' COMMANDS '}' COMMANDS  { $$.traducao = $1.traducao; }
+COMANDOS: COMANDO COMANDOS { $$.traducao = $1.traducao + $2.traducao; }
 	| { $$.traducao = ""; }
 
-COMMAND: EXPRESSION { $$.traducao = $1.traducao; }
+COMANDO: ATRIBUICAO { $$.traducao = $1.traducao; }
+	| EXPRESSAO { $$.traducao = $1.traducao; }
+	| EOL { $$.traducao = ""; }
 
-EXPRESSION : TERM { $$.traducao = $1.traducao; }
-	| EXPRESSION '+' TERM { $$.traducao = $1.traducao + $3.traducao + "ADD\n"; }
-	| EXPRESSION '-' TERM { $$.traducao = $1.traducao + $3.traducao + "SUB\n"; }
+ATRIBUICAO: TK_ID '=' EXPRESSAO {
+		$$.label = gerarTemporaria(false);
+		$$.tipo = $3.tipo;
 
-TERM : UNARY { $$.traducao = $1.traducao; }
-	| TERM '*' UNARY { $$.traducao = $1.traducao + $3.traducao + "MUL\n"; }
-	| TERM '/' UNARY { $$.traducao = $1.traducao + $3.traducao + "DIV\n"; }
+		Variavel *var = buscarVariavel($1.label);
 
-UNARY : FACTOR { $$.traducao = $1.traducao; }
+		if (var != NULL && var->getTipo() != $3.tipo) {
+			yyerror("Erro de atribuição: tipos incompatíveis");
+		}
 
-FACTOR : TK_NUM {
-	string label = gerarTemporaria();
-}
+		criarVariavel($$.label, $1.label, $3.tipo);
+
+		string traducao = $3.traducao;
+
+		traducao += $$.label + " = " + $3.label + ";\n";
+
+		$$.traducao = traducao; 
+	}
+
+EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
+	| EXPRESSAO '+' TERMO {
+		$$.label = gerarTemporaria();
+
+		criarVariavel($$.label, $$.label, "int", true);
+
+		string traducao = $1.traducao + $3.traducao;
+
+		traducao += $$.label + " = " + $1.label + " + " + $3.label + ";\n";
+
+		$$.traducao = traducao; 
+	}
+	| EXPRESSAO '-' TERMO {
+		$$.label = gerarTemporaria();
+
+		criarVariavel($$.label, $$.label, "int", true);
+
+		string traducao = $1.traducao + $3.traducao;
+
+		traducao += $$.label + " = " + $1.label + " - " + $3.label + ";\n";
+
+		$$.traducao = traducao; 
+	}
+
+TERMO : UNARIO { $$ = $1; }
+	| TERMO '*' UNARIO {
+		$$.label = gerarTemporaria();
+
+		criarVariavel($$.label, $$.label, "int", true);
+
+		string traducao = $1.traducao + $3.traducao;
+
+		traducao += $$.label + " = " + $1.label + " * " + $3.label + ";\n";
+
+		$$.traducao = traducao; 
+	}
+	| TERMO '/' UNARIO {
+		$$.label = gerarTemporaria();
+
+		criarVariavel($$.label, $$.label, "int", true);
+
+		string traducao = $1.traducao + $3.traducao;
+
+		traducao += $$.label + " = " + $1.label + " / " + $3.label + ";\n";
+
+		$$.traducao = traducao; 
+	}
+
+UNARIO : PRIMARIO { $$ = $1; }
+
+PRIMARIO : TK_NUM {
+		$$.label = gerarTemporaria();
+		$$.tipo = "int";
+
+		criarVariavel($$.label, $$.label, "int", true);
+
+		$$.traducao = $$.label + " = " + $1.label + ";\n";
+	}
+	| TK_ID {
+		$$.label = gerarTemporaria();
+		$$.tipo = "int";
+
+		criarVariavel($$.label, $$.label, "int", true);
+
+		$$.traducao = $$.label + " = " + $1.label + ";\n";
+	}
 
 %%
 
