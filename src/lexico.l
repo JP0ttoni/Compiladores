@@ -7,43 +7,45 @@ DIGITO [0-9]
 LETRA [A-Za-z_]
 
 DELIM {ESPACO}+
-NUM {DIGITO}+
-REAL {NUM}+("."{NUM}+)?
-CHAR \'({LETRA}|{NUM})\'
-ID {LETRA}({LETRA}|{NUM})*
+
+INTEIRO ({DIGITO})+
+REAL (((({DIGITO}+)|({DIGITO}*\.{DIGITO}+))([eE][-+]?{DIGITO}+)?))
+
+CHAR \'({LETRA}|{INTEIRO})\'
+ID {LETRA}({LETRA}|{INTEIRO})*
+
+TIPOS "int"|"float"|"bool"|"char"|"string"
 
 %%
 
-"\n"		    { return EOL;                               }
-  
-{DELIM} 	    {                                           }
+{DELIM} 	    { /* Ignorar espaços em branco*/            }
+"\n"		    {                                           }
   
 "main"		    { return TK_MAIN;                           }
   
-"int"		    { return TK_TIPO_INT;                       } 
-  
-[(){}[\];,.]    { return *yytext;                           }
+"var"           { return TK_VAR;                            }
+"as"            { return TK_AS;                             }
+
+"print"         { return TK_PRINT;                          }
+"println"       { return TK_PRINTLN;                        }
+
+{TIPOS}         { yylval.label = yytext; return TK_TIPO;    }
+
+"--"            { return TK_MENOS_MENOS;                    }
+"++"            { return TK_MAIS_MAIS;                      }
+"//"            { return TK_DIV;                            }
+[+\-*/|\"]      { return *yytext;                           }
+[(){}[\]]       { return *yytext;                           }
+[;,~:=%_]       { return *yytext;                           }
+
+{INTEIRO}		{ yylval.label = yytext; return TK_INTEIRO; }
+{REAL}          { yylval.label = yytext; return TK_REAL;    }
+
+"true"          { yylval.label = "true"; return TK_TRUE;    }
+"false"         { yylval.label = "false"; return TK_FALSE;  }
+
+{ID}		    { yylval.label = yytext; return TK_ID;       }
     
-"--"            { return TK_MINUS_MINUS;                    }
-[+\-*/%]        { return *yytext;                           }
-    
-"="		        { return '=';                               }
-"'"             { return '\'';                              }
-    
-[<>]            { return *yytext;                           }
-"<="            { return TK_MENOR_IGUAL;                    }
-">="            { return TK_MAIOR_IGUAL;                    }
-"=="            { return TK_EQUAL;                          }
-"!="            { return TK_DIFERENT;                       }
-                       
-"&&"            { return TK_ELOG;                           }
-"||"            { return TK_OR;                             }
-"!"             { return TK_NEGATIVE;                       }
-    
-    
-{NUM}		    { yylval.label = yytext; return TK_NUM;     }
-{ID}		    { yylval.label = yytext; return TK_ID;      }
-    
-.			    { *yytext;                                  }
+.			    { *yytext;                                   }
     
 %%

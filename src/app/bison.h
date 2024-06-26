@@ -6,16 +6,18 @@ using namespace std;
 namespace bison {
 
     vector<string> fatiaString(string str, string del) {
-        vector<string> v;
-        int end = str.find(del); 
+        size_t pos_start = 0, pos_end, delim_len = del.length();
+        string token;
+        vector<string> res;
 
-        while (end != -1) {
-            v.push_back(str.substr(0, end));
-            str.erase(str.begin(), str.begin() + end + 1);
-            end = str.find(del);
+        while ((pos_end = str.find(del, pos_start)) != string::npos) {
+            token = str.substr (pos_start, pos_end - pos_start);
+            pos_start = pos_end + delim_len;
+            res.push_back (token);
         }
 
-        return v;
+        res.push_back (str.substr (pos_start));
+        return res;
     }
 
     string formataCodigo(string code) {

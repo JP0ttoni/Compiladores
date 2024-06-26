@@ -1,2 +1,5 @@
-a = 1 + 1 * 3
-1 + 1
+var a = 1;
+var b = a as float;
+
+println(a);
+println(b);
