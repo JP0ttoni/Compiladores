@@ -291,9 +291,3 @@ int main(int argc, char* argv[])
 	yyparse();
 	return 0;
 }
-
-void yyerror(string MSG)
-{
-	cout << MSG << endl;
-	exit (0);
-}
