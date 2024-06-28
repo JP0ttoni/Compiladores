@@ -16,10 +16,13 @@ int yylex(void);
 %token TK_TRUE TK_FALSE
 %token TK_PRINT TK_PRINTLN
 %token TK_AND TK_OR TK_NOT
+%token TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL
 
 %start S
 
 %left TK_AS
+%nonassoc TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL 
+%nonassoc '+' '-' TK_AND TK_OR
 
 %%
 
@@ -138,6 +141,106 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 		criarVariavel($$.label, $$.label, "bool", true);
 
 		$$.traducao += $$.label + " = " + label1 + " && " + label2 + ";\n";
+	}
+	| EXPRESSAO TK_IGUAL EXPRESSAO {
+		if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+			if ($1.tipo != $3.tipo) {
+				yyerror("Tipos incompatíveis na comparação");
+			}
+		}
+
+		$$.traducao = $1.traducao + $3.traducao;
+
+		$$.label = gerarTemporaria();
+		$$.tipo = "bool";
+
+		criarVariavel($$.label, $$.label, "bool", true);
+
+		$$.traducao += $$.label + " = " + $1.label + " == " + $3.label + ";\n";
+	}
+	| EXPRESSAO TK_DIFERENTE EXPRESSAO {
+		if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+			if ($1.tipo != $3.tipo) {
+				yyerror("Tipos incompatíveis na comparação");
+			}
+		}
+
+		$$.traducao = $1.traducao + $3.traducao;
+
+		$$.label = gerarTemporaria();
+		$$.tipo = "bool";
+
+		criarVariavel($$.label, $$.label, "bool", true);
+
+		$$.traducao += $$.label + " = " + $1.label + " != " + $3.label + ";\n";
+	}
+	| EXPRESSAO TK_MAIOR EXPRESSAO {
+		if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+			yyerror("Operação de comparação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+		}
+
+		$$.traducao = $1.traducao + $3.traducao;
+
+		string label1 = converter($1, "int", $$.traducao);
+		string label2 = converter($3, "int", $$.traducao);
+
+		$$.label = gerarTemporaria();
+		$$.tipo = "bool";
+
+		criarVariavel($$.label, $$.label, "bool", true);
+
+		$$.traducao += $$.label + " = " + label1 + " > " + label2 + ";\n";
+	}
+	| EXPRESSAO TK_MENOR EXPRESSAO {
+		if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+			yyerror("Operação de comparação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+		}
+
+		$$.traducao = $1.traducao + $3.traducao;
+
+		string label1 = converter($1, "int", $$.traducao);
+		string label2 = converter($3, "int", $$.traducao);
+
+		$$.label = gerarTemporaria();
+		$$.tipo = "bool";
+
+		criarVariavel($$.label, $$.label, "bool", true);
+
+		$$.traducao += $$.label + " = " + label1 + " < " + label2 + ";\n";
+	}
+	| EXPRESSAO TK_MAIOR_IGUAL EXPRESSAO {
+		if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+			yyerror("Operação de comparação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+		}
+
+		$$.traducao = $1.traducao + $3.traducao;
+
+		string label1 = converter($1, "int", $$.traducao);
+		string label2 = converter($3, "int", $$.traducao);
+
+		$$.label = gerarTemporaria();
+		$$.tipo = "bool";
+
+		criarVariavel($$.label, $$.label, "bool", true);
+
+		$$.traducao += $$.label + " = " + label1 + " >= " + label2 + ";\n";
+	}
+	| EXPRESSAO TK_MENOR_IGUAL EXPRESSAO {
+		if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+			yyerror("Operação de comparação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+		}
+
+		$$.traducao = $1.traducao + $3.traducao;
+
+		string label1 = converter($1, "int", $$.traducao);
+		string label2 = converter($3, "int", $$.traducao);
+
+		$$.label = gerarTemporaria();
+		$$.tipo = "bool";
+
+		criarVariavel($$.label, $$.label, "bool", true);
+
+		$$.traducao += $$.label + " = " + label1 + " <= " + label2 + ";\n";
 	}
 
 TERMO : UNARIO { $$ = $1; }
