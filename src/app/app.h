@@ -97,6 +97,17 @@ namespace app {
         cout << endl;
     }
 
+    /**
+     * Cria uma variável na tabela de símbolos
+     * 
+     * @param nome - Nome da variável
+     * @param apelido - Apelido da variável
+     * @param tipo - Tipo da variável
+     * @param temporaria - Indica se a variável é temporária
+     * 
+     * @return Variavel - Ponteiro para a variável criada
+     */
+
     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria = false) {
         for (int i = 0; i < tabelaSimbolos.size(); i++) {
             if (tabelaSimbolos[i]->getApelido() == apelido) {
@@ -110,6 +121,28 @@ namespace app {
         tabelaSimbolos.push_back(variavel);
         return variavel;
     }
+
+    /**
+     * Cria uma variável auxiliar que definirá o tamanho da string
+     * 
+     * @param label - Nome da célula de memória que armazenará a variável
+     * @param tamanho - Tamanho da string
+     * 
+     * @return string - Código intermediário gerado
+     */
+
+    string criarString(string label, string tamanho) {
+        Variavel* variavel = criarVariavel(label + "_size", label + "_size", "int", true);
+        return variavel->getNome() + " = " + tamanho + ";\n";
+    }
+
+    /**
+     * Busca uma variável na tabela de símbolos pelo apelido
+     * 
+     * @param apelido - Apelido da variável
+     * 
+     * @return Variavel - Ponteiro para a variável encontrada
+     */
 
     Variavel* buscarVariavel(string apelido) {
         for (int i = 0; i < tabelaSimbolos.size(); i++) {

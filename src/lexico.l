@@ -5,14 +5,18 @@
 ESPACO [ \t]
 DIGITO [0-9]
 LETRA [A-Za-z_]
+UNDERLINE "_"
+
+ALFANUMERICO ({LETRA}|{DIGITO}|{UNDERLINE})
 
 DELIM {ESPACO}+
 
 INTEIRO ({DIGITO})+
 REAL (((({DIGITO}+)|({DIGITO}*\.{DIGITO}+))([eE][-+]?{DIGITO}+)?))
 
-CHAR \'({LETRA}|{INTEIRO})\'
-ID {LETRA}({LETRA}|{INTEIRO})*
+CHAR \'({ALFANUMERICO})\'
+STRING \"(\\.|[^"\\])*\"
+ID ({LETRA}|{UNDERLINE})({ALFANUMERICO})*
 
 TIPOS "int"|"float"|"bool"|"char"|"string"
 
@@ -21,13 +25,12 @@ TIPOS "int"|"float"|"bool"|"char"|"string"
 {DELIM} 	    { /* Ignorar espaços em branco*/            }
 "\n"		    {                                           }
   
-"main"		    { return TK_MAIN;                           }
-  
 "var"           { return TK_VAR;                            }
 "as"            { return TK_AS;                             }
 
 "print"         { return TK_PRINT;                          }
 "println"       { return TK_PRINTLN;                        }
+"size"          { return TK_SIZE;                           }
 
 "&&"            { return TK_AND;                            }
 "and"           { return TK_AND;                            }
@@ -50,8 +53,10 @@ TIPOS "int"|"float"|"bool"|"char"|"string"
 "//"            { return TK_DIV;                            }
 [+\-*/|\"]      { return *yytext;                           }
 [(){}[\]]       { return *yytext;                           }
-[;,~:=%_]       { return *yytext;                           }
+[;,~:=%]        { return *yytext;                           }
 
+{CHAR}          { yylval.label = yytext; return TK_CHAR;    }
+{STRING}        { yylval.label = yytext; return TK_STRING;  }
 {INTEIRO}		{ yylval.label = yytext; return TK_INTEIRO; }
 {REAL}          { yylval.label = yytext; return TK_REAL;    }
 
