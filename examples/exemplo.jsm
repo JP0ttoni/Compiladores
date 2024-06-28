@@ -1,5 +1,8 @@
-var a = 1;
-var b = a as float;
+var a = true;
+var b = false;
+
+var result = a and b;
 
 println(a);
 println(b);
+println(not b);

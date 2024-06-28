@@ -29,6 +29,13 @@ TIPOS "int"|"float"|"bool"|"char"|"string"
 "print"         { return TK_PRINT;                          }
 "println"       { return TK_PRINTLN;                        }
 
+"&&"            { return TK_AND;                            }
+"and"           { return TK_AND;                            }
+"||"            { return TK_OR;                             }
+"or"            { return TK_OR;                             }
+"!"             { return TK_NOT;                            }
+"not"           { return TK_NOT;                            }
+
 {TIPOS}         { yylval.label = yytext; return TK_TIPO;    }
 
 "--"            { return TK_MENOS_MENOS;                    }

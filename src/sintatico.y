@@ -15,6 +15,7 @@ int yylex(void);
 %token TK_DIV TK_MENOS_MENOS TK_MAIS_MAIS
 %token TK_TRUE TK_FALSE
 %token TK_PRINT TK_PRINTLN
+%token TK_AND TK_OR TK_NOT
 
 %start S
 
@@ -91,13 +92,6 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 		$$.label = $2.label;
 		$$.traducao = $2.traducao;
 	}
-	| EXPRESSAO TK_AS TK_TIPO {
-		debug("Conversão explícita de tipo do tipo " + $1.tipo + " para " + $3.label);
-
-		string label = converter($1, $3.label, $$.traducao);
-		$$.tipo = $3.label;
-		$$.label = label;
-	}
 	| EXPRESSAO '+' TERMO {
 		if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
 			yyerror("Operação de soma não permitida para tipos " + $1.tipo + " e " + $3.tipo);
@@ -131,6 +125,19 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 		criarVariavel($$.label, $$.label, $$.tipo, true);
 
 		$$.traducao += $$.label + " = " + label1 + " - " + label2 + ";\n";
+	}
+	| EXPRESSAO TK_AND TERMO {
+		$$.traducao = $1.traducao + $3.traducao;
+		$$.tipo = "bool";
+
+		string label1 = converter($1, "bool", $$.traducao);
+		string label2 = converter($3, "bool", $$.traducao);
+
+		$$.label = gerarTemporaria();
+
+		criarVariavel($$.label, $$.label, "bool", true);
+
+		$$.traducao += $$.label + " = " + label1 + " && " + label2 + ";\n";
 	}
 
 TERMO : UNARIO { $$ = $1; }
@@ -185,8 +192,28 @@ TERMO : UNARIO { $$ = $1; }
 
 		$$.traducao += $$.label + " = " + label1 + " / " + label2 + ";\n";
 	}
+	| TERMO TK_OR UNARIO {
+		$$.traducao = $1.traducao + $3.traducao;
+		$$.tipo = "bool";
+
+		string label1 = converter($1, "bool", $$.traducao);
+		string label2 = converter($3, "bool", $$.traducao);
+
+		$$.label = gerarTemporaria();
+
+		criarVariavel($$.label, $$.label, "bool", true);
+
+		$$.traducao += $$.label + " = " + label1 + " || " + label2 + ";\n";
+	}
 
 UNARIO : PRIMARIO { $$ = $1; }
+	| PRIMARIO TK_AS TK_TIPO {
+		debug("Conversão explícita de tipo do tipo " + $1.tipo + " para " + $3.label);
+
+		string label = converter($1, $3.label, $$.traducao);
+		$$.tipo = $3.label;
+		$$.label = label;
+	}
 	| '+' PRIMARIO {
 		debug("Operação de '+' unário para tipo " + $2.tipo);
 
@@ -215,6 +242,20 @@ UNARIO : PRIMARIO { $$ = $1; }
 		criarVariavel($$.label, $$.label, $$.tipo, true);
 
 		$$.traducao = $2.traducao + $$.label + " = -" + $2.label + ";\n";
+	}
+	| TK_NOT PRIMARIO {
+		debug("Operação de 'not' unário para tipo " + $2.tipo);
+
+		if ($2.tipo != "bool") {
+			yyerror("Operação de 'not' unário não permitido para tipo " + $2.tipo);
+		}
+
+		$$.label = gerarTemporaria();
+		$$.tipo = "bool";
+
+		criarVariavel($$.label, $$.label, $$.tipo, true);
+
+		$$.traducao = $2.traducao + $$.label + " = !" + $2.label + ";\n";
 	}
 
 PRIMARIO : TK_INTEIRO {
