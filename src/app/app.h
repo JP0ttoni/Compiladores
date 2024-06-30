@@ -15,6 +15,7 @@ namespace app {
 
     int contadorVariavel = 1;
     int contadorVariavelTemporaria = 1;
+    int contadorLabel = 1;
 
     typedef struct {
         string label;
@@ -117,23 +118,11 @@ namespace app {
 
         string apelidoEfetivo = temporaria ? "§" + apelido : apelido;
 
+        debug("Criando variável " + nome + " do tipo " + tipo + " com apelido " + apelidoEfetivo);
+
         Variavel *variavel = new Variavel(nome, apelidoEfetivo, tipo);
         tabelaSimbolos.push_back(variavel);
         return variavel;
-    }
-
-    /**
-     * Cria uma variável auxiliar que definirá o tamanho da string
-     * 
-     * @param label - Nome da célula de memória que armazenará a variável
-     * @param tamanho - Tamanho da string
-     * 
-     * @return string - Código intermediário gerado
-     */
-
-    string criarString(string label, string tamanho) {
-        Variavel* variavel = criarVariavel(label + "_size", label + "_size", "int", true);
-        return variavel->getNome() + " = " + tamanho + ";\n";
     }
 
     /**
@@ -153,6 +142,26 @@ namespace app {
 
         return NULL;
     }
+
+    /**
+     * Cria uma variável auxiliar que definirá o tamanho da string
+     * 
+     * @param label - Nome da célula de memória que armazenará a variável
+     * @param tamanho - Tamanho da string
+     * 
+     * @return string - Código intermediário gerado
+     */
+
+    string criarString(string label, string tamanho) {
+        Variavel* variavel = buscarVariavel(label + "_size");
+
+        if (variavel == NULL) {
+            variavel = criarVariavel(label + "_size", label + "_size", "int");
+            debug("Criando string " + label + ".");
+        }
+
+        return variavel->getNome() + " = " + tamanho + ";\n";
+    }
     
     string gerarTemporaria(bool temp = true) {
         if (temp) {
@@ -160,6 +169,10 @@ namespace app {
         }
 
         return "v" + to_string(contadorVariavel++);
+    }
+
+    string gerarLabel() {
+        return "label" + to_string(contadorLabel++);
     }
 
     /**
@@ -180,13 +193,25 @@ namespace app {
                 translation += label + " = " + "(float) " + atributo.label + ";\n";
             } else if (tipoDestino == "bool") {
                 translation += label + " = " + atributo.label + " != 0;\n";
+            } else if (tipoDestino == "char*") {
+                translation += label + " = " + "intToString(" + atributo.label + ");\n";
+                translation += criarString(label, "calcularTamanhoString(" + label + ")");
+            } else {
+                yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
             }
         } else if (atributo.tipo == "float") {
             if (tipoDestino == "int") {
                 translation += label + " = " + "(int) " + atributo.label + ";\n";
             } else if (tipoDestino == "bool") {
                 translation += label + " = " + atributo.label + " != 0.0;\n";
+            } else if (tipoDestino == "char*") {
+                translation += label + " = " + "floatToString(" + atributo.label + ");\n";
+                translation += criarString(label, "calcularTamanhoString(" + label + ")");
+            } else {
+                yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
             }
+        } else {
+            yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
         }
 
         return label;

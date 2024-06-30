@@ -17,6 +17,7 @@ int yylex(void);
 %token TK_PRINT TK_PRINTLN TK_SCANF TK_SIZE
 %token TK_AND TK_OR TK_NOT
 %token TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL
+%token TK_IF TK_ELSE TK_DO TK_WHILE TK_FOR
 
 %start S
 
@@ -24,18 +25,110 @@ int yylex(void);
 %nonassoc TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL 
 %nonassoc '+' '-' TK_AND TK_OR
 
+%nonassoc IF
+%nonassoc TK_ELSE
+
 %%
 
-S : COMANDOS { iniciarCompilador($1.traducao); } 
-	| { cout << "// Programa vazio" << endl; }
+S : COMANDOS { iniciarCompilador($1.traducao); }
 
 COMANDOS: COMANDOS COMANDO { $$.traducao = $1.traducao + $2.traducao;}
-	| COMANDO { $$.traducao = $1.traducao; }
+	| { $$.traducao = ""; }
 
 COMANDO: '{' COMANDOS '}' { $$.traducao = $2.traducao; }
-	| DECLARACAO_VARIAVEL ';' { $$.traducao = $1.traducao; }
-    | ATRIBUICAO ';' { $$.traducao = $1.traducao; }
-	| EXPRESSAO ';' { $$.traducao = $1.traducao; }
+	| DECLARACAO_VARIAVEL OPCIONAL { $$.traducao = $1.traducao; }
+    | ATRIBUICAO OPCIONAL { $$.traducao = $1.traducao; }
+	| FUNCTIONS OPCIONAL { $$.traducao = $1.traducao; }
+	| CONDICIONAL { $$.traducao = $1.traducao; }
+	| LOOP { $$.traducao = $1.traducao; }
+
+OPCIONAL : ';' {} | {}
+
+CONDICIONAL : TK_IF '(' EXPRESSAO ')' COMANDO %prec IF {
+		if ($3.tipo != "bool") {
+			yyerror("Condição do if deve ser do tipo bool");
+		}
+
+		string temp = gerarTemporaria();
+		string ifLabel = gerarLabel();
+
+		criarVariavel(temp, temp, "bool", true);
+
+		$$.traducao = $3.traducao + "if (!" + $3.label + ") goto " + ifLabel + ";\n" + $5.traducao + ifLabel + ":\n";
+	}
+	| TK_IF '(' EXPRESSAO ')' COMANDO TK_ELSE COMANDO {
+		if ($3.tipo != "bool") {
+			yyerror("Condição do if deve ser do tipo bool");
+		}
+
+		string temp = gerarTemporaria();
+		string ifLabel = gerarLabel();
+		string elseLabel = gerarLabel();
+
+		criarVariavel(temp, temp, "bool", true);
+
+		$$.traducao = $3.traducao + "if (!" + $3.label + ") goto " + elseLabel + ";\n" + $5.traducao + "goto " + ifLabel + ";\n" + elseLabel + ":\n" + $7.traducao + ifLabel + ":\n";
+	}
+
+LOOP : TK_WHILE '(' EXPRESSAO ')' COMANDO {
+		debug("Comando de loop while");
+
+		if ($3.tipo != "bool") {
+			yyerror("Condição do while deve ser do tipo bool");
+		}
+
+		string temp = gerarTemporaria();
+		string whileLabel = gerarLabel();
+		string endLabel = gerarLabel();
+
+		criarVariavel(temp, temp, "bool", true);
+
+		$$.traducao = whileLabel + ":\n" + $3.traducao + "if (!" + $3.label + ") goto " + endLabel + ";\n" + $5.traducao + "goto " + whileLabel + ";\n" + endLabel + ":\n";
+	}
+	| TK_DO COMANDO TK_WHILE '(' EXPRESSAO ')' {
+		debug("Comando do-while");
+
+		if ($5.tipo != "bool") {
+			yyerror("Condição do while deve ser do tipo bool");
+		}
+
+		string temp = gerarTemporaria();
+		string whileLabel = gerarLabel();
+		string endLabel = gerarLabel();
+
+		criarVariavel(temp, temp, "bool", true);
+
+		$$.traducao = whileLabel + ":\n" + $2.traducao + $5.traducao + "if (!" + $5.label + ") goto " + endLabel + ";\n" + "goto " + whileLabel + ";\n" + endLabel + ":\n";
+	}
+	| TK_FOR '(' FOR_INICIALIZADOR ';' EXPRESSAO ';' MULTIPLA_EXPRESSOES ')' COMANDO {
+		debug("Comando de loop for");
+
+		if ($5.tipo != "bool") {
+			yyerror("Condição do for deve ser do tipo bool");
+		}
+
+		string temp = gerarTemporaria();
+		string forLabel = gerarLabel();
+		string endLabel = gerarLabel();
+
+		criarVariavel(temp, temp, "bool", true);
+
+		$$.traducao = $3.traducao + forLabel + ":\n" + $5.traducao + "if (!" + $5.label + ") goto " + endLabel + ";\n" + $9.traducao + $7.traducao + "goto " + forLabel + ";\n" + endLabel + ":\n";
+	}
+
+FOR_INICIALIZADOR: DECLARACAO_VARIAVEL { $$.traducao = $1.traducao; }
+	| MULTIPLA_ATRIBUICAO { $$.traducao = $1.traducao; }
+	| { $$.traducao = ""; }
+
+MULTIPLA_ATRIBUICAO : ATRIBUICAO { $$.traducao = $1.traducao; }
+	| MULTIPLA_ATRIBUICAO ',' ATRIBUICAO { $$.traducao = $1.traducao + $3.traducao; }
+
+EXPRESSAO_ATRIBUICAO: EXPRESSAO { $$.traducao = $1.traducao; }
+	| ATRIBUICAO { $$.traducao = $1.traducao; }
+
+MULTIPLA_EXPRESSOES: EXPRESSAO_ATRIBUICAO { $$.traducao = $1.traducao; }
+	| MULTIPLA_EXPRESSOES ',' EXPRESSAO_ATRIBUICAO { $$.traducao = $1.traducao + $3.traducao; }
+	| { $$.traducao = ""; }
 
 DECLARACAO_VARIAVEL: TK_VAR TK_ID '=' EXPRESSAO {
 	debug("Declarando variável " + $2.label + " do tipo " + $4.tipo);
@@ -62,8 +155,7 @@ DECLARACAO_VARIAVEL: TK_VAR TK_ID '=' EXPRESSAO {
 }
 
 ATRIBUICAO: TK_ID '=' EXPRESSAO {
-		$$.label = gerarTemporaria();
-		$$.tipo = $3.tipo;
+		debug("Atribuindo valor à variável " + $1.label);
 
 		Variavel *var = buscarVariavel($1.label);
 
@@ -75,13 +167,16 @@ ATRIBUICAO: TK_ID '=' EXPRESSAO {
 			yyerror("Tipos incompatíveis na atribuição");
 		}
 
-		criarVariavel($$.label, $1.label, $3.tipo);
+		$$.tipo = $3.tipo;
+		$$.label = var->getNome();
+		$$.traducao = $3.traducao;
 
-		string traducao = $3.traducao;
-
-		traducao += $$.label + " = " + $3.label + ";\n";
-
-		$$.traducao = traducao; 
+		if ($3.tipo == "char*") {
+			$$.traducao += criarString($$.label, $3.label + "_size");
+			$$.traducao += $$.label + " = copiarString(" + $3.label + ", " + $3.label + "_size);\n";
+		} else {
+			$$.traducao += $$.label + " = " + $3.label + ";\n";
+		} 
 	}
 
 EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
@@ -443,6 +538,11 @@ PRIMARIO : TK_INTEIRO {
 
 		$$.traducao = $$.label + " = false;\n";
 	}
+	| FUNCTIONS {
+		$$.label = $1.label;
+		$$.tipo = $1.tipo;
+		$$.traducao = $1.traducao;
+	}
 	| TK_ID {
 		Variavel *var = buscarVariavel($1.label);
 
@@ -454,11 +554,6 @@ PRIMARIO : TK_INTEIRO {
 
 		$$.label = var->getNome();
 		$$.tipo = var->getTipo();
-	}
-	| FUNCTIONS {
-		$$.label = $1.label;
-		$$.tipo = $1.tipo;
-		$$.traducao = $1.traducao;
 	}
 
 FUNCTIONS: TK_PRINT '(' EXPRESSAO ')' {

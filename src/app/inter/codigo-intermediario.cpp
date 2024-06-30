@@ -17,6 +17,9 @@ int calcularTamanhoString(char *str);
 char* concatenarString(char *s1, int n1, char *s2, int n2);
 char* copiarString(char *str, int tamanho);
 
+char* intToString(int n);
+char* floatToString(float n);
+
 char* lerEntrada();
 
 /*-=-*/
@@ -61,17 +64,33 @@ endWhile:
     return result;
 }
 
+// ta liberado?
+char* intToString(int n) {
+    char *result = (char*) malloc(12);
+    sprintf(result, "%d", n);
+    return result;
+}
+
+// ta liberado?
+char* floatToString(float n) {
+    char *result = (char*) malloc(12);
+    sprintf(result, "%.8f", n);
+    return result;
+}
+
 char* lerEntrada() {
     int tamanho;
     int capacidade;
     char caractere;
-    char* charPtr = (char*) malloc(capacidade);
 
     int whileFlag;
     int ifFlag;
 
     tamanho = 0;
+    capacidade = 12;
     caractere = 0;
+
+    char* charPtr = (char*) malloc(capacidade);
 
 startWhile:
     whileFlag = cin.get(caractere) && caractere != '\n';

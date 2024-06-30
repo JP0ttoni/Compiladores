@@ -28,6 +28,12 @@ TIPOS "int"|"float"|"bool"|"char"|"string"
 "var"           { return TK_VAR;                            }
 "as"            { return TK_AS;                             }
 
+"if"            { return TK_IF;                             }
+"else"          { return TK_ELSE;                           }
+"do"            { return TK_DO;                             }
+"while"         { return TK_WHILE;                          }
+"for"           { return TK_FOR;                            }
+
 "print"         { return TK_PRINT;                          }
 "println"       { return TK_PRINTLN;                        }
 "scanf"         { return TK_SCANF;                          }
