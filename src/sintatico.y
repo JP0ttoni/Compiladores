@@ -35,12 +35,17 @@ S : COMANDOS { iniciarCompilador($1.traducao); }
 COMANDOS: COMANDOS COMANDO { $$.traducao = $1.traducao + $2.traducao;}
 	| { $$.traducao = ""; }
 
-COMANDO: '{' COMANDOS '}' { $$.traducao = $2.traducao; }
+COMANDO: CRIAR_CONTEXTO COMANDOS '}' { $$.traducao = $2.traducao; debug("Removendo contexto"); removerContexto(); }
 	| DECLARACAO_VARIAVEL OPCIONAL { $$.traducao = $1.traducao; }
     | ATRIBUICAO OPCIONAL { $$.traducao = $1.traducao; }
 	| FUNCTIONS OPCIONAL { $$.traducao = $1.traducao; }
 	| CONDICIONAL { $$.traducao = $1.traducao; }
 	| LOOP { $$.traducao = $1.traducao; }
+
+CRIAR_CONTEXTO: '{' {
+		debug("Criando novo contexto...");
+		criarContexto();
+	}
 
 OPCIONAL : ';' {} | {}
 
@@ -137,10 +142,6 @@ DECLARACAO_VARIAVEL: TK_VAR TK_ID '=' EXPRESSAO {
 	$$.tipo = $4.tipo;
 
 	Variavel *var = buscarVariavel($2.label);
-
-	if (var != NULL) {
-		yyerror("Variável " + $2.label + " já declarada");
-	}
 
 	criarVariavel($$.label, $2.label, $4.tipo);
 
@@ -614,6 +615,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	criarContexto();
 	yyparse();
 	return 0;
 }

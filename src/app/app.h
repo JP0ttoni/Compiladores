@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include <list>
 #include <fstream>
 #include <sstream>
 
@@ -62,7 +63,69 @@ namespace app {
             }
     };
 
+    class Contexto {
+        private:
+            list<Variavel*> variaveis;
+        public:
+            Contexto() {
+                this->variaveis = list<Variavel*>();
+            }
+
+            /**
+             * Cria uma variável na tabela de símbolos
+             * 
+             * @param nome - Nome da variável
+             * @param apelido - Apelido da variável
+             * @param tipo - Tipo da variável
+             * 
+             * @return Variavel - Ponteiro para a variável criada
+             */
+
+            Variavel* criarVariavel(string nome, string apelido, string tipo) {
+                for (list<Variavel*>::iterator it = this->variaveis.begin(); it != this->variaveis.end(); ++it) {
+                    if ((*it)->getApelido() == apelido) {
+                        yyerror("Variável asdasd " + nome + " já foi declarada");
+                    }
+                }
+
+                debug("Criando variável " + nome + " do tipo " + tipo + " com apelido " + apelido);
+
+                Variavel *variavel = new Variavel(nome, apelido, tipo);
+                this->variaveis.push_back(variavel);
+                return variavel;
+            }
+
+            /**
+             * Busca uma variável na tabela de símbolos pelo apelido
+             * 
+             * @param apelido - Apelido da variável
+             * 
+             * @return Variavel - Ponteiro para a variável encontrada
+             */
+
+            Variavel* buscarVariavel(string apelido) {
+                for (list<Variavel*>::iterator it = this->variaveis.begin(); it != this->variaveis.end(); ++it) {
+                    if ((*it)->getApelido() == apelido) {
+                        return *it;
+                    }
+                }
+
+                return NULL;
+            }
+    };
+
+    list<Contexto*> pilhaContextos;
     vector<Variavel*> tabelaSimbolos;
+
+    Contexto* criarContexto() {
+        Contexto *contexto = new Contexto();
+        pilhaContextos.push_back(contexto);
+        return contexto;
+    }
+
+    void removerContexto() {
+        pilhaContextos.pop_back();
+    }
 
     void iniciarCompilador(string traducaoGeral) {
         ifstream file("src/app/inter/codigo-intermediario.cpp");
@@ -110,17 +173,8 @@ namespace app {
      */
 
     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria = false) {
-        for (int i = 0; i < tabelaSimbolos.size(); i++) {
-            if (tabelaSimbolos[i]->getApelido() == apelido) {
-                yyerror("Variável " + nome + " já foi declarada");
-            }
-        }
-
-        string apelidoEfetivo = temporaria ? "§" + apelido : apelido;
-
-        debug("Criando variável " + nome + " do tipo " + tipo + " com apelido " + apelidoEfetivo);
-
-        Variavel *variavel = new Variavel(nome, apelidoEfetivo, tipo);
+        Contexto* contexto = pilhaContextos.back();
+        Variavel* variavel = contexto->criarVariavel(nome, apelido, tipo);
         tabelaSimbolos.push_back(variavel);
         return variavel;
     }
@@ -134,9 +188,11 @@ namespace app {
      */
 
     Variavel* buscarVariavel(string apelido) {
-        for (int i = 0; i < tabelaSimbolos.size(); i++) {
-            if (tabelaSimbolos[i]->getApelido() == apelido) {
-                return tabelaSimbolos[i];
+        for (list<Contexto*>::reverse_iterator it = pilhaContextos.rbegin(); it != pilhaContextos.rend(); ++it) {
+            Variavel *variavel = (*it)->buscarVariavel(apelido);
+
+            if (variavel != NULL) {
+                return variavel;
             }
         }
 
@@ -153,10 +209,10 @@ namespace app {
      */
 
     string criarString(string label, string tamanho) {
-        Variavel* variavel = buscarVariavel(label + "_size");
+        Variavel* variavel = buscarVariavel("$" + label + "_size");
 
         if (variavel == NULL) {
-            variavel = criarVariavel(label + "_size", label + "_size", "int");
+            variavel = criarVariavel(label + "_size", "$" + label + "_size", "int");
             debug("Criando string " + label + ".");
         }
 

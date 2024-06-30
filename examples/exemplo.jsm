@@ -1,7 +1,9 @@
 var a = 0;
 
-for (;true; a = a + 1) {
-    println("teste")
+{
+    var a = 10;
+
+    println(a)
 }
 
-println(a);
+println(a)
