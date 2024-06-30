@@ -13,7 +13,11 @@ using namespace std;
 /* Prototipos das Funções Utilitárias */
 
 int calcularTamanhoString(char *str);
-char* concat(char *s1, int n1, char *s2, int n2);
+
+char* concatenarString(char *s1, int n1, char *s2, int n2);
+char* copiarString(char *str, int tamanho);
+
+char* lerEntrada();
 
 /*-=-*/
 
@@ -21,21 +25,69 @@ char* concat(char *s1, int n1, char *s2, int n2);
 
 int calcularTamanhoString(char *str) {
     int i = 0;
-    while (str[i] != '\0') {
-        i++;
-    }
+    int flag;
+
+startWhile:
+    flag = str[i] != '\0';
+    if (!flag) goto endWhile;
+    i++;
+    goto startWhile;
+endWhile:
+
     return i;
 }
 
-char* concat(char *s1, int n1, char *s2, int n2) {
-    char *result = (char*) malloc(n1 + n2 + 1);
-
-    if (result == NULL) {
-        cout << "Erro ao alocar memória para concatenação de strings" << endl;
-        exit(1);
-    }
-    
+char* concatenarString(char *s1, int n1, char *s2, int n2) {
+    char *result = (char*) malloc(n1 + n2);
     strcpy(result, s1);
     strcat(result, s2);
     return result;
+}
+
+char* copiarString(char *str, int tamanho) {
+    char *result = (char*) malloc(tamanho);
+
+    int index = 0;
+    int whileFlag;
+    
+startWhile:
+    whileFlag = index < tamanho;
+    if (!whileFlag) goto endWhile;
+    result[index] = str[index];
+    index++;
+    goto startWhile;
+endWhile:
+
+    return result;
+}
+
+char* lerEntrada() {
+    int tamanho;
+    int capacidade;
+    char caractere;
+    char* charPtr = (char*) malloc(capacidade);
+
+    int whileFlag;
+    int ifFlag;
+
+    tamanho = 0;
+    caractere = 0;
+
+startWhile:
+    whileFlag = cin.get(caractere) && caractere != '\n';
+    if (!whileFlag) goto endWhile;
+
+    ifFlag = tamanho + 1 >= capacidade;
+    if (!ifFlag) goto endIf;
+    capacidade = capacidade * 2;
+    charPtr = (char*) realloc(charPtr, capacidade);
+endIf:
+    charPtr[tamanho] = caractere;
+    tamanho++;
+    goto startWhile;
+endWhile:
+
+    charPtr[tamanho] = '\0';
+
+    return charPtr;
 }

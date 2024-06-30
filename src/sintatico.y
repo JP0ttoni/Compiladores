@@ -14,7 +14,7 @@ int yylex(void);
 %token TK_VAR TK_AS
 %token TK_DIV TK_MENOS_MENOS TK_MAIS_MAIS
 %token TK_TRUE TK_FALSE
-%token TK_PRINT TK_PRINTLN TK_SIZE
+%token TK_PRINT TK_PRINTLN TK_SCANF TK_SIZE
 %token TK_AND TK_OR TK_NOT
 %token TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL
 
@@ -51,7 +51,14 @@ DECLARACAO_VARIAVEL: TK_VAR TK_ID '=' EXPRESSAO {
 
 	criarVariavel($$.label, $2.label, $4.tipo);
 
-	$$.traducao = $4.traducao + $$.label + " = " + $4.label + ";\n";
+	$$.traducao = $4.traducao;
+
+	if ($4.tipo == "char*") {
+		$$.traducao += criarString($$.label, $4.label + "_size");
+		$$.traducao += $$.label + " = copiarString(" + $4.label + ", " + $4.label + "_size);\n";
+	} else {
+		$$.traducao +=  $$.label + " = " + $4.label + ";\n";
+	}
 }
 
 ATRIBUICAO: TK_ID '=' EXPRESSAO {
@@ -97,20 +104,23 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 			criarVariavel($$.label, $$.label, $$.tipo, true);
 
 			$$.traducao += $$.label + " = " + label1 + " + " + label2 + ";\n";
-		} else if ($1.tipo == "char*" && $3.tipo == "char*") {
+		} else if ($1.tipo == "char*" || $3.tipo == "char*") {
 			$$.traducao = $1.traducao + $3.traducao;
 			$$.tipo = "char*";
+
+			string label1 = converter($1, "char*", $$.traducao);
+			string label2 = converter($3, "char*", $$.traducao);
 
 			$$.label = gerarTemporaria();
 			
 			string somaTamanho = gerarTemporaria();
 
-			$$.traducao += somaTamanho + " = " + $1.label + "_size + " + $3.label + "_size;\n";
+			$$.traducao += somaTamanho + " = " + label1 + "_size + " + label2 + "_size;\n";
 
 			criarVariavel(somaTamanho, somaTamanho, "int", true);
 			criarVariavel($$.label, $$.label, "char*", true);
 
-			$$.traducao += $$.label + " = concat(" + $1.label + ", " + $1.label + "_size, " + $3.label + ", " + $3.label + "_size);\n";
+			$$.traducao += $$.label + " = concatenarString(" + label1 + ", " + label1 + "_size, " + label2 + ", " + label2 + "_size);\n";
 			$$.traducao += criarString($$.label, somaTamanho);
 		} else {
 			yyerror("Operação de soma/concatenação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
@@ -375,6 +385,16 @@ PRIMARIO : TK_INTEIRO {
 
 		$$.traducao = $$.label + " = " + $1.label + ";\n";
 	}
+	| TK_CHAR {
+		debug("Criado novo caractere " + $1.label);
+
+		$$.label = gerarTemporaria();
+		$$.tipo = "char";
+
+		criarVariavel($$.label, $$.label, "char", true);
+
+		$$.traducao = $$.label + " = " + $1.label + ";\n";
+	}
 	| TK_STRING {
 		debug("Criado nova string " + $1.label);
 
@@ -392,16 +412,6 @@ PRIMARIO : TK_INTEIRO {
 		for (int i = 0; i < stringReal.size(); i++) {
 			$$.traducao += $$.label + "[" + to_string(i) + "] = '" + stringReal[i] + "';\n";
 		}
-	}
-	| TK_CHAR {
-		debug("Criado novo caractere " + $1.label);
-
-		$$.label = gerarTemporaria();
-		$$.tipo = "char";
-
-		criarVariavel($$.label, $$.label, "char", true);
-
-		$$.traducao = $$.label + " = " + $1.label + ";\n";
 	}
 	| TK_REAL {
 		debug("Criado novo número real " + $1.label);
@@ -459,6 +469,18 @@ FUNCTIONS: TK_PRINT '(' EXPRESSAO ')' {
 	| TK_PRINTLN '(' EXPRESSAO ')' {
 		debug("Comando de impressão com quebra de linha");
 		$$.traducao = $3.traducao + "cout << " + $3.label + " << endl;\n";
+	}
+	| TK_SCANF '(' ')' {
+		debug("Comando de leitura");
+
+		$$.label = gerarTemporaria();
+		$$.tipo = "char*";
+
+		criarVariavel($$.label, $$.label, "char*", true);
+
+		$$.traducao = $$.label + " = lerEntrada();\n";
+		$$.traducao += criarString($$.label, "calcularTamanhoString(" + $$.label + ")");
+
 	}
 	| TK_SIZE '(' EXPRESSAO ')' {
 		debug("Comando de tamanho de string");

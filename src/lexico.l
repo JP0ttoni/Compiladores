@@ -30,6 +30,7 @@ TIPOS "int"|"float"|"bool"|"char"|"string"
 
 "print"         { return TK_PRINT;                          }
 "println"       { return TK_PRINTLN;                        }
+"scanf"         { return TK_SCANF;                          }
 "size"          { return TK_SIZE;                           }
 
 "&&"            { return TK_AND;                            }

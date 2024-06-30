@@ -1,1 +1,3 @@
-println(size("asdasd" + " espaço " + "asodkasokdasd"));
+var palavra = scanf();
+println(palavra);
+println(size(palavra));
