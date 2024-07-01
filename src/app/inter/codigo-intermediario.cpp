@@ -30,12 +30,12 @@ int calcularTamanhoString(char *str) {
     int i = 0;
     int flag;
 
-startWhile:
+inicioWhile:
     flag = str[i] != '\0';
-    if (!flag) goto endWhile;
+    if (!flag) goto fimWhile;
     i++;
-    goto startWhile;
-endWhile:
+    goto inicioWhile;
+fimWhile:
 
     return i;
 }
@@ -53,13 +53,13 @@ char* copiarString(char *str, int tamanho) {
     int index = 0;
     int whileFlag;
     
-startWhile:
+inicioWhile:
     whileFlag = index < tamanho;
-    if (!whileFlag) goto endWhile;
+    if (!whileFlag) goto fimWhile;
     result[index] = str[index];
     index++;
-    goto startWhile;
-endWhile:
+    goto inicioWhile;
+fimWhile:
 
     return result;
 }
@@ -92,19 +92,19 @@ char* lerEntrada() {
 
     char* charPtr = (char*) malloc(capacidade);
 
-startWhile:
+iniciarWhile:
     whileFlag = cin.get(caractere) && caractere != '\n';
-    if (!whileFlag) goto endWhile;
+    if (!whileFlag) goto fimWhile;
 
     ifFlag = tamanho + 1 >= capacidade;
-    if (!ifFlag) goto endIf;
+    if (!ifFlag) goto fimIf;
     capacidade = capacidade * 2;
     charPtr = (char*) realloc(charPtr, capacidade);
-endIf:
+fimIf:
     charPtr[tamanho] = caractere;
     tamanho++;
-    goto startWhile;
-endWhile:
+    goto iniciarWhile;
+fimWhile:
 
     charPtr[tamanho] = '\0';
 

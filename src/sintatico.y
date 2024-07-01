@@ -21,7 +21,6 @@ int yylex(void);
 
 %start S
 
-%left TK_AS
 %nonassoc TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL 
 %nonassoc '+' '-' TK_AND TK_OR
 
@@ -84,11 +83,11 @@ LOOP : TK_WHILE '(' EXPRESSAO ')' COMANDO {
 
 		string temp = gerarTemporaria();
 		string whileLabel = gerarLabel();
-		string endLabel = gerarLabel();
+		string finalLabel = gerarLabel();
 
 		criarVariavel(temp, temp, "bool", true);
 
-		$$.traducao = whileLabel + ":\n" + $3.traducao + "if (!" + $3.label + ") goto " + endLabel + ";\n" + $5.traducao + "goto " + whileLabel + ";\n" + endLabel + ":\n";
+		$$.traducao = whileLabel + ":\n" + $3.traducao + "if (!" + $3.label + ") goto " + finalLabel + ";\n" + $5.traducao + "goto " + whileLabel + ";\n" + finalLabel + ":\n";
 	}
 	| TK_DO COMANDO TK_WHILE '(' EXPRESSAO ')' {
 		debug("Comando do-while");
@@ -99,11 +98,11 @@ LOOP : TK_WHILE '(' EXPRESSAO ')' COMANDO {
 
 		string temp = gerarTemporaria();
 		string whileLabel = gerarLabel();
-		string endLabel = gerarLabel();
+		string finalLabel = gerarLabel();
 
 		criarVariavel(temp, temp, "bool", true);
 
-		$$.traducao = whileLabel + ":\n" + $2.traducao + $5.traducao + "if (!" + $5.label + ") goto " + endLabel + ";\n" + "goto " + whileLabel + ";\n" + endLabel + ":\n";
+		$$.traducao = whileLabel + ":\n" + $2.traducao + $5.traducao + "if (!" + $5.label + ") goto " + finalLabel + ";\n" + "goto " + whileLabel + ";\n" + finalLabel + ":\n";
 	}
 	| TK_FOR '(' FOR_INICIALIZADOR ';' EXPRESSAO ';' MULTIPLA_EXPRESSOES ')' COMANDO {
 		debug("Comando de loop for");
@@ -114,11 +113,11 @@ LOOP : TK_WHILE '(' EXPRESSAO ')' COMANDO {
 
 		string temp = gerarTemporaria();
 		string forLabel = gerarLabel();
-		string endLabel = gerarLabel();
+		string finalLabel = gerarLabel();
 
 		criarVariavel(temp, temp, "bool", true);
 
-		$$.traducao = $3.traducao + forLabel + ":\n" + $5.traducao + "if (!" + $5.label + ") goto " + endLabel + ";\n" + $9.traducao + $7.traducao + "goto " + forLabel + ";\n" + endLabel + ":\n";
+		$$.traducao = $3.traducao + forLabel + ":\n" + $5.traducao + "if (!" + $5.label + ") goto " + finalLabel + ";\n" + $9.traducao + $7.traducao + "goto " + forLabel + ";\n" + finalLabel + ":\n";
 	}
 
 FOR_INICIALIZADOR: DECLARACAO_VARIAVEL { $$.traducao = $1.traducao; }
@@ -576,7 +575,6 @@ FUNCTIONS: TK_PRINT '(' EXPRESSAO ')' {
 
 		$$.traducao = $$.label + " = lerEntrada();\n";
 		$$.traducao += criarString($$.label, "calcularTamanhoString(" + $$.label + ")");
-
 	}
 	| TK_SIZE '(' EXPRESSAO ')' {
 		debug("Comando de tamanho de string");

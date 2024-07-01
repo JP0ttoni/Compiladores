@@ -1,9 +1,2 @@
-var a = 0;
-
-{
-    var a = 10;
-
-    println(a)
-}
-
+var a = 1 as float
 println(a)
