@@ -1,2 +1,4 @@
-var a = 1 as float
-println(a)
+while (true) {
+    println("eita")
+    break
+}

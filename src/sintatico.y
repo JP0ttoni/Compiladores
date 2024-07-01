@@ -18,6 +18,7 @@ int yylex(void);
 %token TK_AND TK_OR TK_NOT
 %token TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL
 %token TK_IF TK_ELSE TK_DO TK_WHILE TK_FOR
+%token TK_BREAK TK_CONTINUE
 
 %start S
 
@@ -38,8 +39,28 @@ COMANDO: CRIAR_CONTEXTO COMANDOS '}' { $$.traducao = $2.traducao; debug("Removen
 	| DECLARACAO_VARIAVEL OPCIONAL { $$.traducao = $1.traducao; }
     | ATRIBUICAO OPCIONAL { $$.traducao = $1.traducao; }
 	| FUNCTIONS OPCIONAL { $$.traducao = $1.traducao; }
+	| BREAK_CONTINUE OPCIONAL { $$.traducao = $1.traducao; }
 	| CONDICIONAL { $$.traducao = $1.traducao; }
 	| LOOP { $$.traducao = $1.traducao; }
+
+BREAK_CONTINUE : TK_BREAK {
+		BreakContinue* topo = topoBreakContinue();
+
+		if (topo == NULL) {
+			yyerror("Comando break fora de loop");
+		}
+
+		$$.traducao = "goto " + topo->getFimLabel() + ";\n";
+	}
+	| TK_CONTINUE {
+		BreakContinue* topo = topoBreakContinue();
+
+		if (topo == NULL) {
+			yyerror("Comando continue fora de loop");
+		}
+
+		$$.traducao = "goto " + topo->getInicioLabel() + ";\n";
+	}
 
 CRIAR_CONTEXTO: '{' {
 		debug("Criando novo contexto...");
@@ -74,7 +95,7 @@ CONDICIONAL : TK_IF '(' EXPRESSAO ')' COMANDO %prec IF {
 		$$.traducao = $3.traducao + "if (!" + $3.label + ") goto " + elseLabel + ";\n" + $5.traducao + "goto " + ifLabel + ";\n" + elseLabel + ":\n" + $7.traducao + ifLabel + ":\n";
 	}
 
-LOOP : TK_WHILE '(' EXPRESSAO ')' COMANDO {
+LOOP : WHILE '(' EXPRESSAO ')' COMANDO {
 		debug("Comando de loop while");
 
 		if ($3.tipo != "bool") {
@@ -82,14 +103,17 @@ LOOP : TK_WHILE '(' EXPRESSAO ')' COMANDO {
 		}
 
 		string temp = gerarTemporaria();
-		string whileLabel = gerarLabel();
-		string finalLabel = gerarLabel();
+		BreakContinue* topo = topoBreakContinue();
+
+		string inicioLabel = topo->getInicioLabel();
+		string fimLabel = topo->getFimLabel();
 
 		criarVariavel(temp, temp, "bool", true);
 
-		$$.traducao = whileLabel + ":\n" + $3.traducao + "if (!" + $3.label + ") goto " + finalLabel + ";\n" + $5.traducao + "goto " + whileLabel + ";\n" + finalLabel + ":\n";
+		$$.traducao = inicioLabel + ":\n" + $3.traducao + "if (!" + $3.label + ") goto " + fimLabel + ";\n" + $5.traducao + "goto " + inicioLabel + ";\n" + fimLabel + ":\n";
+		removerBreakContinue();
 	}
-	| TK_DO COMANDO TK_WHILE '(' EXPRESSAO ')' {
+	| DO COMANDO TK_WHILE '(' EXPRESSAO ')' {
 		debug("Comando do-while");
 
 		if ($5.tipo != "bool") {
@@ -97,14 +121,17 @@ LOOP : TK_WHILE '(' EXPRESSAO ')' COMANDO {
 		}
 
 		string temp = gerarTemporaria();
-		string whileLabel = gerarLabel();
-		string finalLabel = gerarLabel();
+		BreakContinue* topo = topoBreakContinue();
+
+		string inicioLabel = topo->getInicioLabel();
+		string fimLabel = topo->getFimLabel();
 
 		criarVariavel(temp, temp, "bool", true);
 
-		$$.traducao = whileLabel + ":\n" + $2.traducao + $5.traducao + "if (!" + $5.label + ") goto " + finalLabel + ";\n" + "goto " + whileLabel + ";\n" + finalLabel + ":\n";
+		$$.traducao = inicioLabel + ":\n" + $2.traducao + $5.traducao + "if (!" + $5.label + ") goto " + fimLabel + ";\n" + "goto " + inicioLabel + ";\n" + fimLabel + ":\n";
+		removerBreakContinue();
 	}
-	| TK_FOR '(' FOR_INICIALIZADOR ';' EXPRESSAO ';' MULTIPLA_EXPRESSOES ')' COMANDO {
+	| FOR '(' FOR_INICIALIZADOR ';' EXPRESSAO ';' MULTIPLA_EXPRESSOES ')' COMANDO {
 		debug("Comando de loop for");
 
 		if ($5.tipo != "bool") {
@@ -112,12 +139,37 @@ LOOP : TK_WHILE '(' EXPRESSAO ')' COMANDO {
 		}
 
 		string temp = gerarTemporaria();
-		string forLabel = gerarLabel();
-		string finalLabel = gerarLabel();
+
+		BreakContinue* topo = topoBreakContinue();
+
+		string inicioLabel = topo->getInicioLabel();
+		string fimLabel = topo->getFimLabel();
 
 		criarVariavel(temp, temp, "bool", true);
 
-		$$.traducao = $3.traducao + forLabel + ":\n" + $5.traducao + "if (!" + $5.label + ") goto " + finalLabel + ";\n" + $9.traducao + $7.traducao + "goto " + forLabel + ";\n" + finalLabel + ":\n";
+		$$.traducao = $3.traducao + inicioLabel + ":\n" + $5.traducao + "if (!" + $5.label + ") goto " + fimLabel + ";\n" + $9.traducao + $7.traducao + "goto " + inicioLabel + ";\n" + fimLabel + ":\n";
+		removerBreakContinue();
+	}
+
+WHILE: TK_WHILE {
+		string whileLabel = gerarLabel();
+		string finalLabel = gerarLabel();
+
+		adicionarBreakContinue(whileLabel, finalLabel);
+	}
+
+FOR: TK_FOR {
+		string forLabel = gerarLabel();
+		string finalLabel = gerarLabel();
+
+		adicionarBreakContinue(forLabel, finalLabel);
+	}
+
+DO: TK_DO {
+		string doLabel = gerarLabel();
+		string finalLabel = gerarLabel();
+
+		adicionarBreakContinue(doLabel, finalLabel);
 	}
 
 FOR_INICIALIZADOR: DECLARACAO_VARIAVEL { $$.traducao = $1.traducao; }

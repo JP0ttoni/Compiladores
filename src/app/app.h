@@ -114,7 +114,27 @@ namespace app {
             }
     };
 
+    class BreakContinue {
+        private:
+            string inicioLabel;
+            string fimLabel;
+        public:
+            BreakContinue(string inicioLabel, string fimLabel) {
+                this->inicioLabel = inicioLabel;
+                this->fimLabel = fimLabel;
+            }
+
+            string getInicioLabel() {
+                return this->inicioLabel;
+            }
+
+            string getFimLabel() {
+                return this->fimLabel;
+            }
+    };
+
     list<Contexto*> pilhaContextos;
+    list<BreakContinue*> pilhaBreakContinue;
     vector<Variavel*> tabelaSimbolos;
 
     Contexto* criarContexto() {
@@ -125,6 +145,21 @@ namespace app {
 
     void removerContexto() {
         pilhaContextos.pop_back();
+    }
+
+    void adicionarBreakContinue(string inicioLabel, string fimLabel) {
+        BreakContinue *breakContinue = new BreakContinue(inicioLabel, fimLabel);
+        pilhaBreakContinue.push_back(breakContinue);
+    }
+
+    BreakContinue* topoBreakContinue() {
+        return pilhaBreakContinue.back();
+    }
+
+    BreakContinue* removerBreakContinue() {
+        BreakContinue *breakContinue = pilhaBreakContinue.back();
+        pilhaBreakContinue.pop_back();
+        return breakContinue;
     }
 
     void iniciarCompilador(string traducaoGeral) {

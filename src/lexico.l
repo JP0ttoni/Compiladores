@@ -34,6 +34,9 @@ TIPOS "int"|"float"|"bool"|"char"|"string"
 "while"         { return TK_WHILE;                          }
 "for"           { return TK_FOR;                            }
 
+"break"         { return TK_BREAK;                          }
+"continue"      { return TK_CONTINUE;                       }
+
 "print"         { return TK_PRINT;                          }
 "println"       { return TK_PRINTLN;                        }
 "scanf"         { return TK_SCANF;                          }
