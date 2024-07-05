@@ -42,8 +42,33 @@ fimWhile:
 
 char* concatenarString(char *s1, int n1, char *s2, int n2) {
     char *result = (char*) malloc(n1 + n2);
-    strcpy(result, s1);
-    strcat(result, s2);
+
+    int indice;
+    int indiceAtual;
+
+    int flag;
+
+    indice = 0;
+    indiceAtual = 0;
+
+inicioWhile:
+    flag = indice < n1;
+    if (!flag) goto fimWhile;
+    result[indiceAtual] = s1[indice];
+    indice++;
+    indiceAtual++;
+    goto inicioWhile;
+fimWhile:
+
+inicioWhile2:
+    flag = indice < n2;
+    if (!flag) goto fimWhile2;
+    result[indiceAtual] = s2[indice];
+    indice++;
+    indiceAtual++;
+    goto inicioWhile2;
+fimWhile2:
+
     return result;
 }
 
@@ -64,20 +89,21 @@ fimWhile:
     return result;
 }
 
-// ta liberado?
 char* intToString(int n) {
-    char *result = (char*) malloc(12);
+    char *result;
+    result = (char*) malloc(12);
     sprintf(result, "%d", n);
     return result;
 }
 
-// ta liberado?
 char* floatToString(float n) {
-    char *result = (char*) malloc(12);
+    char *result;
+    result = (char*) malloc(12);
     sprintf(result, "%.8f", n);
     return result;
 }
 
+// AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 char* lerEntrada() {
     int tamanho;
     int capacidade;
@@ -86,17 +112,19 @@ char* lerEntrada() {
     int whileFlag;
     int ifFlag;
 
+    int t1;
+
     tamanho = 0;
     capacidade = 12;
     caractere = 0;
-
     char* charPtr = (char*) malloc(capacidade);
 
 iniciarWhile:
     whileFlag = cin.get(caractere) && caractere != '\n';
     if (!whileFlag) goto fimWhile;
 
-    ifFlag = tamanho + 1 >= capacidade;
+    t1 = tamanho + 1;
+    ifFlag = t1 >= capacidade;
     if (!ifFlag) goto fimIf;
     capacidade = capacidade * 2;
     charPtr = (char*) realloc(charPtr, capacidade);
