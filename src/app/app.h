@@ -439,8 +439,18 @@ namespace app {
     }
 
     Funcao* criarFuncao(Funcao *funcao) {
+        list<string> argumentos;
+
+        // começa pelo primeiro argumento
+
+        list<Parametro*> parametros = funcao->getParametros();
+
+        for (Parametro *parametro : parametros) {
+            argumentos.push_back(parametro->getTipo());
+        }
+
         for (Funcao *f : tabelaSimbolosFuncoes) {
-            if (f->getApelido() == funcao->getApelido()) {
+            if (f->compare(funcao->getApelido(), argumentos)) {
                 yyerror("A função com nome " + funcao->getApelido() + " já foi declarada");
             }
         }
