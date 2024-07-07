@@ -14,7 +14,7 @@ int yylex(void);
 %token TK_VAR TK_AS
 %token TK_DIV TK_MENOS_MENOS TK_MAIS_MAIS
 %token TK_TRUE TK_FALSE
-%token TK_PRINT TK_PRINTLN TK_SCANF TK_SIZE TK_TOSTRING
+%token TK_PRINT TK_PRINTLN TK_SCANF TK_SIZE
 %token TK_AND TK_OR TK_NOT
 %token TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL
 %token TK_IF TK_ELSE TK_DO TK_WHILE TK_FOR 
@@ -633,6 +633,7 @@ FUNCTIONS: TK_PRINT '(' EXPRESSAO ')' {
 
 		string label = converter($3, STRING_TIPO, $$.traducao);
 
+		$$.tipo = "void";
 		$$.traducao += "cout << " + label + ".str;\n";
 	}
 	| TK_PRINTLN '(' EXPRESSAO ')' {
@@ -642,6 +643,7 @@ FUNCTIONS: TK_PRINT '(' EXPRESSAO ')' {
 
 		string label = converter($3, STRING_TIPO, $$.traducao);
 
+		$$.tipo = "void";
 		$$.traducao += "cout << " + label + ".str << endl;\n";
 	}
 	| TK_SCANF '(' ')' {
@@ -671,15 +673,6 @@ FUNCTIONS: TK_PRINT '(' EXPRESSAO ')' {
 		}
 
 		$$.traducao = $3.traducao + $$.label + " = " + size + ";\n";
-	}
-	| TK_TOSTRING '(' EXPRESSAO ')' {
-		debug("Comando de conversão para string");
-
-		$$.traducao = $3.traducao;
-
-		string label = converter($3, STRING_TIPO, $$.traducao);
-
-		$$.traducao += $$.label + " = toString(" + $3.label + ");\n";
 	}
 	| TK_ID '(' ARGUMENTOS ')' {
 		debug("Chamada de função");

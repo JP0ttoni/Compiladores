@@ -49,7 +49,6 @@ COMENTARIO "%%".*
 "println"       { return TK_PRINTLN;                        }
 "scanf"         { return TK_SCANF;                          }
 "size"          { return TK_SIZE;                           }
-"toString"      { return TK_TOSTRING;                       }
 
 "return"        { return TK_RETURN;                         }
 
