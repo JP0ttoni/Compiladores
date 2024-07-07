@@ -31,9 +31,4 @@ namespace bison {
         return identedCode;
     }
 
-    void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
-        cout << codigoErro << ": " << mensagem << endl;
-        exit(1);
-    }
-
 }

@@ -14,11 +14,13 @@ int yylex(void);
 %token TK_VAR TK_AS
 %token TK_DIV TK_MENOS_MENOS TK_MAIS_MAIS
 %token TK_TRUE TK_FALSE
-%token TK_PRINT TK_PRINTLN TK_SCANF TK_SIZE
+%token TK_PRINT TK_PRINTLN TK_SCANF TK_SIZE TK_TOSTRING
 %token TK_AND TK_OR TK_NOT
 %token TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL
-%token TK_IF TK_ELSE TK_DO TK_WHILE TK_FOR
+%token TK_IF TK_ELSE TK_DO TK_WHILE TK_FOR 
 %token TK_BREAK TK_CONTINUE
+%token TK_SWITCH TK_CASE TK_DEFAULT
+%token TK_RETURN
 
 %start S
 
@@ -40,6 +42,9 @@ COMANDO: CRIAR_CONTEXTO COMANDOS '}' { $$.traducao = $2.traducao; debug("Removen
     | ATRIBUICAO OPCIONAL { $$.traducao = $1.traducao; }
 	| FUNCTIONS OPCIONAL { $$.traducao = $1.traducao; }
 	| BREAK_CONTINUE OPCIONAL { $$.traducao = $1.traducao; }
+	| RETORNO_FUNCAO OPCIONAL { $$.traducao = $1.traducao; }
+	| DEFINICAO_FUNCAO { $$.traducao = $1.traducao; }
+	| SWITCH_COMANDO { $$.traducao = $1.traducao; }
 	| CONDICIONAL { $$.traducao = $1.traducao; }
 	| LOOP { $$.traducao = $1.traducao; }
 
@@ -53,7 +58,7 @@ BREAK_CONTINUE : TK_BREAK {
 		$$.traducao = "goto " + topo->getFimLabel() + ";\n";
 	}
 	| TK_CONTINUE {
-		BreakContinue* topo = topoBreakContinue();
+		BreakContinue* topo = topoContinue();
 
 		if (topo == NULL) {
 			yyerror("Comando continue fora de loop");
@@ -70,19 +75,19 @@ CRIAR_CONTEXTO: '{' {
 OPCIONAL : ';' {} | {}
 
 CONDICIONAL : TK_IF '(' EXPRESSAO ')' COMANDO %prec IF {
-		if ($3.tipo != "bool") {
+		if ($3.tipo != BOOL_TIPO) {
 			yyerror("Condição do if deve ser do tipo bool");
 		}
 
 		string temp = gerarTemporaria();
 		string ifLabel = gerarLabel();
 
-		criarVariavel(temp, temp, "bool", true);
+		criarVariavel(temp, temp, BOOL_TIPO, true);
 
 		$$.traducao = $3.traducao + "if (!" + $3.label + ") goto " + ifLabel + ";\n" + $5.traducao + ifLabel + ":\n";
 	}
 	| TK_IF '(' EXPRESSAO ')' COMANDO TK_ELSE COMANDO {
-		if ($3.tipo != "bool") {
+		if ($3.tipo != BOOL_TIPO) {
 			yyerror("Condição do if deve ser do tipo bool");
 		}
 
@@ -90,7 +95,7 @@ CONDICIONAL : TK_IF '(' EXPRESSAO ')' COMANDO %prec IF {
 		string ifLabel = gerarLabel();
 		string elseLabel = gerarLabel();
 
-		criarVariavel(temp, temp, "bool", true);
+		criarVariavel(temp, temp, BOOL_TIPO, true);
 
 		$$.traducao = $3.traducao + "if (!" + $3.label + ") goto " + elseLabel + ";\n" + $5.traducao + "goto " + ifLabel + ";\n" + elseLabel + ":\n" + $7.traducao + ifLabel + ":\n";
 	}
@@ -98,7 +103,7 @@ CONDICIONAL : TK_IF '(' EXPRESSAO ')' COMANDO %prec IF {
 LOOP : WHILE '(' EXPRESSAO ')' COMANDO {
 		debug("Comando de loop while");
 
-		if ($3.tipo != "bool") {
+		if ($3.tipo != BOOL_TIPO) {
 			yyerror("Condição do while deve ser do tipo bool");
 		}
 
@@ -108,7 +113,7 @@ LOOP : WHILE '(' EXPRESSAO ')' COMANDO {
 		string inicioLabel = topo->getInicioLabel();
 		string fimLabel = topo->getFimLabel();
 
-		criarVariavel(temp, temp, "bool", true);
+		criarVariavel(temp, temp, BOOL_TIPO, true);
 
 		$$.traducao = inicioLabel + ":\n" + $3.traducao + "if (!" + $3.label + ") goto " + fimLabel + ";\n" + $5.traducao + "goto " + inicioLabel + ";\n" + fimLabel + ":\n";
 		removerBreakContinue();
@@ -116,7 +121,7 @@ LOOP : WHILE '(' EXPRESSAO ')' COMANDO {
 	| DO COMANDO TK_WHILE '(' EXPRESSAO ')' {
 		debug("Comando do-while");
 
-		if ($5.tipo != "bool") {
+		if ($5.tipo != BOOL_TIPO) {
 			yyerror("Condição do while deve ser do tipo bool");
 		}
 
@@ -126,7 +131,7 @@ LOOP : WHILE '(' EXPRESSAO ')' COMANDO {
 		string inicioLabel = topo->getInicioLabel();
 		string fimLabel = topo->getFimLabel();
 
-		criarVariavel(temp, temp, "bool", true);
+		criarVariavel(temp, temp, BOOL_TIPO, true);
 
 		$$.traducao = inicioLabel + ":\n" + $2.traducao + $5.traducao + "if (!" + $5.label + ") goto " + fimLabel + ";\n" + "goto " + inicioLabel + ";\n" + fimLabel + ":\n";
 		removerBreakContinue();
@@ -134,7 +139,7 @@ LOOP : WHILE '(' EXPRESSAO ')' COMANDO {
 	| FOR '(' FOR_INICIALIZADOR ';' EXPRESSAO ';' MULTIPLA_EXPRESSOES ')' COMANDO {
 		debug("Comando de loop for");
 
-		if ($5.tipo != "bool") {
+		if ($5.tipo != BOOL_TIPO) {
 			yyerror("Condição do for deve ser do tipo bool");
 		}
 
@@ -145,7 +150,7 @@ LOOP : WHILE '(' EXPRESSAO ')' COMANDO {
 		string inicioLabel = topo->getInicioLabel();
 		string fimLabel = topo->getFimLabel();
 
-		criarVariavel(temp, temp, "bool", true);
+		criarVariavel(temp, temp, BOOL_TIPO, true);
 
 		$$.traducao = $3.traducao + inicioLabel + ":\n" + $5.traducao + "if (!" + $5.label + ") goto " + fimLabel + ";\n" + $9.traducao + $7.traducao + "goto " + inicioLabel + ";\n" + fimLabel + ":\n";
 		removerBreakContinue();
@@ -192,15 +197,18 @@ DECLARACAO_VARIAVEL: TK_VAR TK_ID '=' EXPRESSAO {
 	$$.label = gerarTemporaria(false);
 	$$.tipo = $4.tipo;
 
+	if ($$.tipo == "void") {
+		yyerror("A variável " + $2.label + " está recebendo uma expressão do tipo void...");
+	}
+
 	Variavel *var = buscarVariavel($2.label);
 
 	criarVariavel($$.label, $2.label, $4.tipo);
 
 	$$.traducao = $4.traducao;
 
-	if ($4.tipo == "char*") {
-		$$.traducao += criarString($$.label, $4.label + "_size");
-		$$.traducao += $$.label + " = copiarString(" + $4.label + ", " + $4.label + "_size);\n";
+	if ($4.tipo == STRING_TIPO) {
+		$$.traducao += $$.label + " = copiarString(" + $4.label + ");\n";
 	} else {
 		$$.traducao +=  $$.label + " = " + $4.label + ";\n";
 	}
@@ -223,9 +231,8 @@ ATRIBUICAO: TK_ID '=' EXPRESSAO {
 		$$.label = var->getNome();
 		$$.traducao = $3.traducao;
 
-		if ($3.tipo == "char*") {
-			$$.traducao += criarString($$.label, $3.label + "_size");
-			$$.traducao += $$.label + " = copiarString(" + $3.label + ", " + $3.label + "_size);\n";
+		if ($3.tipo == STRING_TIPO) {
+			$$.traducao += $$.label + " = copiarString(" + $3.label + ");\n";
 		} else {
 			$$.traducao += $$.label + " = " + $3.label + ";\n";
 		} 
@@ -241,7 +248,7 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 	| EXPRESSAO '+' TERMO {
 		if (isNumerico($1.tipo) && isNumerico($3.tipo)) {
 			$$.traducao = $1.traducao + $3.traducao;
-			$$.tipo = $1.tipo == "float" || $3.tipo == "float" ? "float" : "int";
+			$$.tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
 
 			string label1 = converter($1, $$.tipo, $$.traducao);
 			string label2 = converter($3, $$.tipo, $$.traducao);
@@ -251,24 +258,18 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 			criarVariavel($$.label, $$.label, $$.tipo, true);
 
 			$$.traducao += $$.label + " = " + label1 + " + " + label2 + ";\n";
-		} else if ($1.tipo == "char*" || $3.tipo == "char*") {
+		} else if ($1.tipo == STRING_TIPO || $3.tipo == STRING_TIPO) {
 			$$.traducao = $1.traducao + $3.traducao;
-			$$.tipo = "char*";
+			$$.tipo = STRING_TIPO;
 
-			string label1 = converter($1, "char*", $$.traducao);
-			string label2 = converter($3, "char*", $$.traducao);
+			string label1 = converter($1, STRING_TIPO, $$.traducao);
+			string label2 = converter($3, STRING_TIPO, $$.traducao);
 
 			$$.label = gerarTemporaria();
-			
-			string somaTamanho = gerarTemporaria();
 
-			$$.traducao += somaTamanho + " = " + label1 + "_size + " + label2 + "_size;\n";
+			criarVariavel($$.label, $$.label, STRING_TIPO, true);
 
-			criarVariavel(somaTamanho, somaTamanho, "int", true);
-			criarVariavel($$.label, $$.label, "char*", true);
-
-			$$.traducao += $$.label + " = concatenarString(" + label1 + ", " + label1 + "_size, " + label2 + ", " + label2 + "_size);\n";
-			$$.traducao += criarString($$.label, somaTamanho);
+			$$.traducao += $$.label + " = concatenarString(" + label1 + "," + label2 + ");\n";
 		} else {
 			yyerror("Operação de soma/concatenação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
 		}
@@ -279,7 +280,7 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 		}
 
 		$$.traducao = $1.traducao + $3.traducao;
-		$$.tipo = $1.tipo == "float" || $3.tipo == "float" ? "float" : "int";
+		$$.tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
 
 		string label1 = converter($1, $$.tipo, $$.traducao);
 		string label2 = converter($3, $$.tipo, $$.traducao);
@@ -292,14 +293,14 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 	}
 	| EXPRESSAO TK_AND TERMO {
 		$$.traducao = $1.traducao + $3.traducao;
-		$$.tipo = "bool";
+		$$.tipo = BOOL_TIPO;
 
-		string label1 = converter($1, "bool", $$.traducao);
-		string label2 = converter($3, "bool", $$.traducao);
+		string label1 = converter($1, BOOL_TIPO, $$.traducao);
+		string label2 = converter($3, BOOL_TIPO, $$.traducao);
 
 		$$.label = gerarTemporaria();
 
-		criarVariavel($$.label, $$.label, "bool", true);
+		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
 		$$.traducao += $$.label + " = " + label1 + " && " + label2 + ";\n";
 	}
@@ -313,9 +314,9 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 		$$.traducao = $1.traducao + $3.traducao;
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "bool";
+		$$.tipo = BOOL_TIPO;
 
-		criarVariavel($$.label, $$.label, "bool", true);
+		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
 		$$.traducao += $$.label + " = " + $1.label + " == " + $3.label + ";\n";
 	}
@@ -329,9 +330,9 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 		$$.traducao = $1.traducao + $3.traducao;
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "bool";
+		$$.tipo = BOOL_TIPO;
 
-		criarVariavel($$.label, $$.label, "bool", true);
+		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
 		$$.traducao += $$.label + " = " + $1.label + " != " + $3.label + ";\n";
 	}
@@ -342,13 +343,13 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 
 		$$.traducao = $1.traducao + $3.traducao;
 
-		string label1 = converter($1, "int", $$.traducao);
-		string label2 = converter($3, "int", $$.traducao);
+		string label1 = converter($1, INT_TIPO, $$.traducao);
+		string label2 = converter($3, INT_TIPO, $$.traducao);
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "bool";
+		$$.tipo = BOOL_TIPO;
 
-		criarVariavel($$.label, $$.label, "bool", true);
+		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
 		$$.traducao += $$.label + " = " + label1 + " > " + label2 + ";\n";
 	}
@@ -359,13 +360,13 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 
 		$$.traducao = $1.traducao + $3.traducao;
 
-		string label1 = converter($1, "int", $$.traducao);
-		string label2 = converter($3, "int", $$.traducao);
+		string label1 = converter($1, INT_TIPO, $$.traducao);
+		string label2 = converter($3, INT_TIPO, $$.traducao);
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "bool";
+		$$.tipo = BOOL_TIPO;
 
-		criarVariavel($$.label, $$.label, "bool", true);
+		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
 		$$.traducao += $$.label + " = " + label1 + " < " + label2 + ";\n";
 	}
@@ -376,13 +377,13 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 
 		$$.traducao = $1.traducao + $3.traducao;
 
-		string label1 = converter($1, "int", $$.traducao);
-		string label2 = converter($3, "int", $$.traducao);
+		string label1 = converter($1, INT_TIPO, $$.traducao);
+		string label2 = converter($3, INT_TIPO, $$.traducao);
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "bool";
+		$$.tipo = BOOL_TIPO;
 
-		criarVariavel($$.label, $$.label, "bool", true);
+		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
 		$$.traducao += $$.label + " = " + label1 + " >= " + label2 + ";\n";
 	}
@@ -393,13 +394,13 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 
 		$$.traducao = $1.traducao + $3.traducao;
 
-		string label1 = converter($1, "int", $$.traducao);
-		string label2 = converter($3, "int", $$.traducao);
+		string label1 = converter($1, INT_TIPO, $$.traducao);
+		string label2 = converter($3, INT_TIPO, $$.traducao);
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "bool";
+		$$.tipo = BOOL_TIPO;
 
-		criarVariavel($$.label, $$.label, "bool", true);
+		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
 		$$.traducao += $$.label + " = " + label1 + " <= " + label2 + ";\n";
 	}
@@ -411,7 +412,7 @@ TERMO : UNARIO { $$ = $1; }
 		}
 
 		$$.traducao = $1.traducao + $3.traducao;
-		$$.tipo = $1.tipo == "float" || $3.tipo == "float" ? "float" : "int";
+		$$.tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
 
 		string label1 = converter($1, $$.tipo, $$.traducao);
 		string label2 = converter($3, $$.tipo, $$.traducao);
@@ -429,11 +430,11 @@ TERMO : UNARIO { $$ = $1; }
 
 		$$.traducao = $1.traducao + $3.traducao;
 
-		string label1 = converter($1, "int", $$.traducao);
-		string label2 = converter($3, "int", $$.traducao);
+		string label1 = converter($1, INT_TIPO, $$.traducao);
+		string label2 = converter($3, INT_TIPO, $$.traducao);
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "int";
+		$$.tipo = INT_TIPO;
 
 		criarVariavel($$.label, $$.label, $$.tipo, true);
 
@@ -446,11 +447,11 @@ TERMO : UNARIO { $$ = $1; }
 
 		$$.traducao = $1.traducao + $3.traducao;
 
-		string label1 = converter($1, "float", $$.traducao);
-		string label2 = converter($3, "float", $$.traducao);
+		string label1 = converter($1, FLOAT_TIPO, $$.traducao);
+		string label2 = converter($3, FLOAT_TIPO, $$.traducao);
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "float";
+		$$.tipo = FLOAT_TIPO;
 
 		criarVariavel($$.label, $$.label, $$.tipo, true);
 
@@ -458,14 +459,14 @@ TERMO : UNARIO { $$ = $1; }
 	}
 	| TERMO TK_OR UNARIO {
 		$$.traducao = $1.traducao + $3.traducao;
-		$$.tipo = "bool";
+		$$.tipo = BOOL_TIPO;
 
-		string label1 = converter($1, "bool", $$.traducao);
-		string label2 = converter($3, "bool", $$.traducao);
+		string label1 = converter($1, BOOL_TIPO, $$.traducao);
+		string label2 = converter($3, BOOL_TIPO, $$.traducao);
 
 		$$.label = gerarTemporaria();
 
-		criarVariavel($$.label, $$.label, "bool", true);
+		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
 		$$.traducao += $$.label + " = " + label1 + " || " + label2 + ";\n";
 	}
@@ -510,141 +511,363 @@ UNARIO : PRIMARIO { $$ = $1; }
 	| TK_NOT PRIMARIO {
 		debug("Operação de 'not' unário para tipo " + $2.tipo);
 
-		if ($2.tipo != "bool") {
+		if ($2.tipo != BOOL_TIPO) {
 			yyerror("Operação de 'not' unário não permitido para tipo " + $2.tipo);
 		}
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "bool";
+		$$.tipo = BOOL_TIPO;
 
 		criarVariavel($$.label, $$.label, $$.tipo, true);
 
 		$$.traducao = $2.traducao + $$.label + " = !" + $2.label + ";\n";
 	}
 
-PRIMARIO : TK_INTEIRO {
-		debug("Criado novo número inteiro " + $1.label);
+PRIMARIO : PRIMITIVO {
+		debug ("Criando variável para o primitivo " + $1.label + " do tipo " + $1.tipo);
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "int";
+		$$.tipo = $1.tipo;
+		
+		criarVariavel($$.label, $$.label, $$.tipo, true);
 
-		criarVariavel($$.label, $$.label, "int", true);
+		if ($1.tipo == STRING_TIPO) {
+			string stringReal = fatiaString($1.label, "\"")[1];
+			string stringValor = "\"" + stringReal + "\""; 
 
-		$$.traducao = $$.label + " = " + $1.label + ";\n";
-	}
-	| TK_CHAR {
-		debug("Criado novo caractere " + $1.label);
+			$$.traducao = $$.label + ".str = (char*) malloc(" + to_string(stringReal.size()) + ");\n";
 
-		$$.label = gerarTemporaria();
-		$$.tipo = "char";
+			for (int i = 0; i < stringReal.size(); i++) {
+				$$.traducao += $$.label + ".str[" + to_string(i) + "] = '" + stringReal[i] + "';\n";
+			}
 
-		criarVariavel($$.label, $$.label, "char", true);
-
-		$$.traducao = $$.label + " = " + $1.label + ";\n";
-	}
-	| TK_STRING {
-		debug("Criado nova string " + $1.label);
-
-		$$.label = gerarTemporaria();
-		$$.tipo = "char*";
-
-		criarVariavel($$.label, $$.label, "char*", true);
-
-		string stringReal = fatiaString($1.label, "\"")[1];
-		string stringValor = "\"" + stringReal + "\""; 
-
-		$$.traducao = $$.label + " = (char*) malloc(" + to_string(stringReal.size()) + ");\n";
-		$$.traducao += criarString($$.label, to_string(stringReal.size()));
-
-		for (int i = 0; i < stringReal.size(); i++) {
-			$$.traducao += $$.label + "[" + to_string(i) + "] = '" + stringReal[i] + "';\n";
+			$$.traducao += $$.label + ".tamanho = " + to_string(stringReal.size()) + ";\n";
+		} else {
+			$$.traducao = $$.label + " = " + $1.label + ";\n";
 		}
-	}
-	| TK_REAL {
-		debug("Criado novo número real " + $1.label);
-
-		$$.label = gerarTemporaria();
-		$$.tipo = "float";
-
-		criarVariavel($$.label, $$.label, "float", true);
-
-		$$.traducao = $$.label + " = " + $1.label + ";\n";
-	}
-	| TK_TRUE {
-		debug("Criado novo booleano true");
-
-		$$.label = gerarTemporaria();
-		$$.tipo = "bool";
-
-		criarVariavel($$.label, $$.label, "bool", true);
-
-		$$.traducao = $$.label + " = true;\n";
-	}
-	| TK_FALSE {
-		debug("Criado novo booleano false");
-
-		$$.label = gerarTemporaria();
-		$$.tipo = "bool";
-
-		criarVariavel($$.label, $$.label, "bool", true);
-
-		$$.traducao = $$.label + " = false;\n";
-	}
+ 	}
 	| FUNCTIONS {
 		$$.label = $1.label;
 		$$.tipo = $1.tipo;
 		$$.traducao = $1.traducao;
 	}
 	| TK_ID {
-		Variavel *var = buscarVariavel($1.label);
+		Funcao* funcao = getFuncaoDefinindo();
 
-		if (var == NULL) {
-			yyerror("Variável " + $1.label + " não declarada");
+		string nome = "";
+		string tipo = "";
+
+		if (funcao != NULL) {
+			Parametro* parametro = funcao->getParametroByName($1.label);
+
+			if (parametro != NULL) {
+				nome = parametro->getNome();
+				tipo = parametro->getTipo();
+				debug("Usando variável (parâmetro) " + $1.label + "...");
+			}
 		}
 
-		debug("Usando variável " + $1.label + "...");
+		if (empty(nome)) {
+			Variavel *var = buscarVariavel($1.label);
 
-		$$.label = var->getNome();
-		$$.tipo = var->getTipo();
+			if (var == NULL) {
+				yyerror("Variável " + $1.label + " não declarada");
+			}
+
+			if (var->getTipo() == "void") {
+				yyerror("Variável " + $1.label + " não pode ser usada como expressão");
+			}
+
+			nome = var->getNome();
+			tipo = var->getTipo();
+
+			debug("Usando variável " + $1.label + "...");
+		}
+
+
+		$$.label = nome;
+		$$.tipo = tipo;
+	}
+
+PRIMITIVO: TK_INTEIRO {
+		debug("Criado novo número inteiro " + $1.label);
+
+		$$.label = $1.label;
+		$$.tipo = INT_TIPO;
+	}
+	| TK_CHAR {
+		debug("Criado novo caractere " + $1.label);
+
+		$$.label = $1.label;
+		$$.tipo = "char";
+	}
+	| TK_STRING {
+		debug("Criado nova string " + $1.label);
+
+		$$.label = $1.label;
+		$$.tipo = STRING_TIPO;
+	}
+	| TK_REAL {
+		debug("Criado novo número real " + $1.label);
+
+		$$.label = $1.label;
+		$$.tipo = FLOAT_TIPO;
+	}
+	| TK_TRUE {
+		debug("Criado novo booleano true");
+
+		$$.label = $1.label;
+		$$.tipo = BOOL_TIPO;
+	}
+	| TK_FALSE {
+		debug("Criado novo booleano false");
+
+		$$.label = $1.label;
+		$$.tipo = BOOL_TIPO;
+	}
+
+RETORNO_FUNCAO: TK_RETURN EXPRESSAO {
+		debug("Comando de retorno de função");
+
+		Funcao* funcao = getFuncaoDefinindo();
+
+		if (funcao == NULL) {
+			yyerror("Comando de retorno fora de função");
+		}
+
+		if (funcao->getRetorno() == "void") {
+			yyerror("A função " + funcao->getNome() + " foi declarada como void, então não pode ter retorno");
+		}
+
+		if (funcao->getRetorno() != $2.tipo) {
+			yyerror("Tipo de retorno incompatível com a função");
+		}
+
+		Contexto* contexto = topoContexto();
+
+		contexto->setHasReturn(true);
+
+		$$.traducao = $2.traducao;
+		$$.traducao += "return " + $2.label + ";\n";
 	}
 
 FUNCTIONS: TK_PRINT '(' EXPRESSAO ')' {
 		debug("Comando de impressão");
 
-		$$.traducao = $3.traducao + "cout << " + $3.label + ";\n";
+		$$.traducao = $3.traducao;
+
+		string label = converter($3, STRING_TIPO, $$.traducao);
+
+		$$.traducao += "cout << " + label + ".str;\n";
 	}
 	| TK_PRINTLN '(' EXPRESSAO ')' {
 		debug("Comando de impressão com quebra de linha");
-		$$.traducao = $3.traducao + "cout << " + $3.label + " << endl;\n";
+
+		$$.traducao = $3.traducao;
+
+		string label = converter($3, STRING_TIPO, $$.traducao);
+
+		$$.traducao += "cout << " + label + ".str << endl;\n";
 	}
 	| TK_SCANF '(' ')' {
 		debug("Comando de leitura");
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "char*";
+		$$.tipo = STRING_TIPO;
 
-		criarVariavel($$.label, $$.label, "char*", true);
+		criarVariavel($$.label, $$.label, STRING_TIPO, true);
 
 		$$.traducao = $$.label + " = lerEntrada();\n";
-		$$.traducao += criarString($$.label, "calcularTamanhoString(" + $$.label + ")");
 	}
 	| TK_SIZE '(' EXPRESSAO ')' {
 		debug("Comando de tamanho de string");
 
 		$$.label = gerarTemporaria();
-		$$.tipo = "int";
+		$$.tipo = INT_TIPO;
 
-		criarVariavel($$.label, $$.label, "int", true);
+		criarVariavel($$.label, $$.label, INT_TIPO, true);
 
 		string size = "";
 
-		if ($3.tipo == "char*") {
-			size = $3.label + "_size";
+		if ($3.tipo == STRING_TIPO) {
+			size = $3.label + ".tamanho";
 		} else {
 			size = "1";
 		}
 
 		$$.traducao = $3.traducao + $$.label + " = " + size + ";\n";
+	}
+	| TK_TOSTRING '(' EXPRESSAO ')' {
+		debug("Comando de conversão para string");
+
+		$$.traducao = $3.traducao;
+
+		string label = converter($3, STRING_TIPO, $$.traducao);
+
+		$$.traducao += $$.label + " = toString(" + $3.label + ");\n";
+	}
+	| TK_ID '(' ARGUMENTOS ')' {
+		debug("Chamada de função");
+
+		string label = $3.label;
+
+		list<string> argumentos;
+		vector<string> args = fatiaString(label, ", ");
+
+		string chamada = "";
+		string argumentosChamada = "";
+
+		for (int i = 0; i < args.size(); i++) {
+			string arg = args[i];
+			vector<string> argSplit = fatiaString(arg, ":");
+
+			string argLabel = argSplit[0];
+			string argTipo = argSplit[1];
+
+			argumentos.push_back(argTipo);
+			chamada += argLabel + (i < args.size() - 1 ? ", " : "");
+			argumentosChamada += argTipo + (i < args.size() - 1 ? ", " : "");
+			debug("Adicionado na lista de argumentos " + argLabel + " do tipo " + argTipo);
+		}
+
+		Funcao *funcao = buscarFuncao($1.label, argumentos);
+
+		if (funcao == NULL) {
+			yyerror("Não existe nenhuma função com nome " + $1.label + " e argumentos dos tipos " + argumentosChamada + " (nesta na ordem).");
+		}
+
+		$$.traducao = $3.traducao;
+
+		$$.tipo = funcao->getRetorno();
+
+		if (funcao->getRetorno() == "void") {
+			$$.traducao += funcao->getNome() + "(" + chamada+ ");\n";
+		} else {
+			$$.label = gerarTemporaria();
+
+			criarVariavel($$.label, $$.label, $$.tipo, true);
+
+			if (funcao->getRetorno() == STRING_TIPO) {
+				string label = gerarTemporaria();
+				
+				criarVariavel(label, label, STRING_TIPO, true);
+
+				$$.traducao += label + " = " + funcao->getNome() + "(" + chamada + ");\n";
+				$$.traducao += $$.label + " = copiarString(" + label + ");\n";
+			} else {
+				$$.traducao += $$.label + " = " + funcao->getNome() + "(" + chamada + ");\n";
+			}
+		}
+
+	}
+
+ARGUMENTOS: ARGUMENTOS ',' EXPRESSAO { 
+		$$.traducao = $1.traducao + $3.traducao;
+		$$.label = $1.label + ", " + $3.label + ":" + $3.tipo;
+	}
+	| EXPRESSAO { 
+		$$.traducao = $1.traducao; $$.label = $1.label + ":" + $1.tipo;
+	}
+	| { $$.traducao = ""; }
+
+DEFINICAO_FUNCAO: INICIAR_FUNCAO '(' PARAMETROS ')' '{' COMANDOS '}' {
+		debug("Definindo função " + $2.label);
+
+		Funcao* funcao = getFuncaoDefinindo();
+
+		funcao->setTraducao($6.traducao);
+
+		$$.label = $2.label;
+		$$.tipo = "void";
+
+		if (funcao->getRetorno() != "void") {
+			Contexto* contexto = topoContexto();
+
+			if (!contexto->hasReturn()) {
+				yyerror("A função " + $2.label + " precisa ter pelo menos 1 retorno no contexto principal");
+			}
+		}
+
+		criarFuncao(funcao);
+		removeDefinicaoFuncao();
+		removerContexto();
+	}
+
+INICIAR_FUNCAO: TK_TIPO TK_ID {
+		debug("Criando uma nova inicialização de uma função... " + $2.label);
+
+		criarContexto();
+		criarDefinicaoFuncao($2.label, $1.label);
+
+		$$.label = $2.label;
+	}
+
+PARAMETROS: PARAMETROS ',' PARAMETRO { $$.traducao = $1.traducao + $3.traducao; }
+	| PARAMETRO { $$.traducao = $1.traducao; }
+	| { $$.traducao = ""; }
+
+PARAMETRO: TK_TIPO TK_ID {
+		debug("Criando parâmetro " + $2.label + " do tipo " + $1.label);
+
+		Funcao* funcao = getFuncaoDefinindo();
+
+		$$.label = $2.label;
+		$$.tipo = $1.label;
+
+		funcao->adicionarParametro($2.label, $1.label);
+	}
+
+
+SWITCH_COMANDO: INICIAR_SWITCH CASES '}' {
+		debug("Comando switch-case");
+		Switch* sw = topoSwitch();
+
+		string fimLabel = sw->getFimLabel();
+
+		$$.traducao = $1.traducao;
+
+		$$.traducao += sw->criarSwitchTable();
+		$$.traducao += fimLabel + ":\n";
+
+		removerSwitch();
+		removerBreakContinue();
+	}
+
+CASES: CASES CASE { $$.traducao = $1.traducao + $2.traducao; }
+	| { $$.traducao = ""; }
+
+CASE: TK_CASE PRIMITIVO ':' COMANDOS {
+		Switch* sw = topoSwitch();
+
+		if (sw == NULL) {
+			yyerror("Comando case fora de switch");
+		}
+
+		if ($2.tipo != sw->getTipo()) {
+			yyerror("Tipos incompatíveis no switch-case");
+		}
+
+		sw->adicionarCaso($2.label, $4.traducao);
+	}
+	| TK_DEFAULT ':' COMANDO {
+		Switch* sw = topoSwitch();
+
+		if (sw == NULL) {
+			yyerror("Comando default fora de switch");
+		}
+
+		sw->adicionarDefault($3.traducao);
+	}
+
+INICIAR_SWITCH: TK_SWITCH '(' EXPRESSAO ')' '{' {
+		debug("Iniciando switch-case");
+
+		string breakLabel = gerarLabel();
+
+		criarSwitch($3. label, $3.tipo, breakLabel);
+		adicionarBreakContinue("", breakLabel);
+
+		$$.traducao = $3.traducao;
 	}
 
 %%

@@ -12,15 +12,22 @@ using namespace std;
 
 /* Prototipos das Funções Utilitárias */
 
+typedef struct {
+    char* str;
+    int tamanho;
+} String;
+
 int calcularTamanhoString(char *str);
+String concatenarString(String s1, String s2);
+String copiarString(String str);
+int igualdadeStrings(String s1, String s2);
 
-char* concatenarString(char *s1, int n1, char *s2, int n2);
-char* copiarString(char *str, int tamanho);
+String intToString(int n);
+String floatToString(float n);
+String boolToString(bool b);
+String charToString(char c);
 
-char* intToString(int n);
-char* floatToString(float n);
-
-char* lerEntrada();
+String lerEntrada();
 
 /*-=-*/
 
@@ -40,8 +47,13 @@ fimWhile:
     return i;
 }
 
-char* concatenarString(char *s1, int n1, char *s2, int n2) {
-    char *result = (char*) malloc(n1 + n2);
+String concatenarString(String s1, String s2) {
+    int tamanhoReal;
+    tamanhoReal = s1.tamanho + s2.tamanho;
+
+    String result;
+
+    result.tamanho = tamanhoReal;
 
     int indice;
     int indiceAtual;
@@ -52,18 +64,20 @@ char* concatenarString(char *s1, int n1, char *s2, int n2) {
     indiceAtual = 0;
 
 inicioWhile:
-    flag = indice < n1;
+    flag = indice < s1.tamanho;
     if (!flag) goto fimWhile;
-    result[indiceAtual] = s1[indice];
+    result.str[indiceAtual] = s1.str[indice];
     indice++;
     indiceAtual++;
     goto inicioWhile;
 fimWhile:
 
+    indice = 0;
+
 inicioWhile2:
-    flag = indice < n2;
+    flag = indice < s2.tamanho;
     if (!flag) goto fimWhile2;
-    result[indiceAtual] = s2[indice];
+    result.str[indiceAtual] = s2.str[indice];
     indice++;
     indiceAtual++;
     goto inicioWhile2;
@@ -72,8 +86,15 @@ fimWhile2:
     return result;
 }
 
-char* copiarString(char *str, int tamanho) {
-    char *result = (char*) malloc(tamanho);
+String copiarString(String str) {
+    int tamanho;
+
+    tamanho = str.tamanho;
+
+    String string;
+
+    string.str = (char*) malloc(tamanho);
+    string.tamanho = tamanho;
 
     int index = 0;
     int whileFlag;
@@ -81,30 +102,102 @@ char* copiarString(char *str, int tamanho) {
 inicioWhile:
     whileFlag = index < tamanho;
     if (!whileFlag) goto fimWhile;
-    result[index] = str[index];
+    string.str[index] = str.str[index];
     index++;
     goto inicioWhile;
 fimWhile:
 
-    return result;
+    return string;
 }
 
-char* intToString(int n) {
-    char *result;
-    result = (char*) malloc(12);
-    sprintf(result, "%d", n);
-    return result;
+int igualdadeStrings(String s1, String s2) {
+    int ifFlag;
+
+    ifFlag = s1.tamanho == s2.tamanho;
+
+    if (!ifFlag) goto retornoFalso;
+
+    int index;
+    int whileFlag;
+
+    index = 0;
+
+inicioWhile:
+    whileFlag = index < s1.tamanho;
+    if (!whileFlag) goto fimWhile;
+    ifFlag = s1.str[index] == s2.str[index];
+    if (!ifFlag) goto retornoFalso;
+    index++;
+    goto inicioWhile;
+fimWhile:
+    
+    return true;
+
+retornoFalso:
+    return false;
+}   
+
+String intToString(int n) {
+    String string;
+
+    string.str = (char*) malloc(12);
+    sprintf(string.str, "%d", n);
+    string.tamanho = calcularTamanhoString(string.str);
+
+    return string;
 }
 
-char* floatToString(float n) {
-    char *result;
-    result = (char*) malloc(12);
-    sprintf(result, "%.8f", n);
-    return result;
+String floatToString(float n) {
+    String string;
+
+    string.str = (char*) malloc(12);
+    sprintf(string.str, "%f", n);
+    string.tamanho = calcularTamanhoString(string.str);
+
+    return string;
+}
+
+String boolToString(bool b) {
+    String string;
+    int flag;
+
+    flag = b != 0;
+    if (!flag) goto falseLabel;
+    string.str = (char*) malloc(4);
+    string.tamanho = 4;
+
+    string.str[0] = 't';
+    string.str[1] = 'r';
+    string.str[2] = 'u';
+    string.str[3] = 'e';
+
+    goto fimIf;
+falseLabel:
+    string.str = (char*) malloc(5);
+    string.tamanho = 5;
+
+    string.str[0] = 'f';
+    string.str[1] = 'a';
+    string.str[2] = 'l';
+    string.str[3] = 's';
+    string.str[4] = 'e';
+fimIf:
+
+    return string;
+}
+
+String charToString(char c) {
+    String string;
+
+    string.str = (char*) malloc(1);
+    string.str[0] = c;
+    string.tamanho = 1;
+
+    return string;
 }
 
 // AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-char* lerEntrada() {
+String lerEntrada() {
     int tamanho;
     int capacidade;
     char caractere;
@@ -136,5 +229,14 @@ fimWhile:
 
     charPtr[tamanho] = '\0';
 
-    return charPtr;
+    String *string;
+
+    string = (String*) malloc(sizeof(String));
+    string->str = charPtr;
+
+    tamanho--;
+
+    string->tamanho = tamanho;
+
+    return *string;
 }
