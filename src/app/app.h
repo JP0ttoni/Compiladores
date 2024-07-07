@@ -69,25 +69,31 @@ namespace app {
     }
 
     string gerarFuncaoTemporaria() {
-        return "funcao" + to_string(contadorFuncao++);
+        return "f" + to_string(contadorFuncao++);
     }
 
     string gerarLabel() {
-        return "label" + to_string(contadorLabel++);
+        return "l" + to_string(contadorLabel++);
     }
 
     class Parametro {
         private:
             string nome;
+            string apelido;
             string tipo;
         public:
-            Parametro(string nome, string tipo) {
+            Parametro(string nome, string apelido, string tipo) {
                 this->nome = nome;
+                this->apelido = apelido;
                 this->tipo = tipo;
             }
 
             string getNome() {
                 return this->nome;
+            }
+
+            string getApelido() {
+                return this->apelido;
             }
 
             string getTipo() {
@@ -130,12 +136,13 @@ namespace app {
                 return this->traducao;
             }
 
-            Parametro* adicionarParametro(string nome, string tipo) {
-                Parametro *parametro = new Parametro(nome, tipo);
+            Parametro* adicionarParametro(string apelido, string tipo) {
+                string nome = "param" + to_string(this->parametros.size() + 1);
+                Parametro *parametro = new Parametro(nome, apelido, tipo);
 
                 for (Parametro *p : this->parametros) {
-                    if (p->getNome() == parametro->getNome()) {
-                        yyerror("Parâmetro " + parametro->getNome() + " já foi declarado");
+                    if (p->getApelido() == parametro->getApelido()) {
+                        yyerror("Parâmetro " + parametro->getApelido() + " já foi declarado");
                     }
                 }
 
@@ -145,7 +152,7 @@ namespace app {
 
             Parametro* getParametroByName(string nome) {
                 for (Parametro *p : this->parametros) {
-                    if (p->getNome() == nome) {
+                    if (p->getApelido() == nome) {
                         return p;
                     }
                 }
@@ -259,20 +266,6 @@ namespace app {
              */
 
             Variavel* buscarVariavel(string apelido) {
-                Funcao* funcao = getFuncaoDefinindo();
-
-                string nome = "";
-                string tipo = "";
-
-                if (funcao != NULL) {
-                    Parametro* parametro = funcao->getParametroByName(apelido);
-
-                    if (parametro != NULL) {
-                        Variavel* fakeVariavel = new Variavel(apelido, apelido, parametro->getTipo());
-                        return fakeVariavel;
-                    }
-                }
-
                 for (list<Variavel*>::iterator it = this->variaveis.begin(); it != this->variaveis.end(); ++it) {
                     if ((*it)->getApelido() == apelido) {
                         return *it;
@@ -618,6 +611,17 @@ namespace app {
      */
 
     Variavel* buscarVariavel(string apelido) {
+        Funcao* funcao = getFuncaoDefinindo();
+
+        if (funcao != NULL) {
+            Parametro* parametro = funcao->getParametroByName(apelido);
+
+            if (parametro != NULL) {
+                Variavel* fakeVariavel = new Variavel(parametro->getNome(), apelido, parametro->getTipo());
+                return parametro->getAsVariavel();
+            }
+        }
+
         for (list<Contexto*>::reverse_iterator it = pilhaContextos.rbegin(); it != pilhaContextos.rend(); ++it) {
             Variavel *variavel = (*it)->buscarVariavel(apelido);
 
