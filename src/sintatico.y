@@ -237,12 +237,6 @@ ATRIBUICAO: TK_ID '=' EXPRESSAO {
 	}
 
 EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
-	| '(' EXPRESSAO ')' {
-		debug("Expressão entre parênteses");
-		$$.tipo = $2.tipo;
-		$$.label = $2.label;
-		$$.traducao = $2.traducao;
-	}
 	| EXPRESSAO '+' TERMO {
 		if (isNumerico($1.tipo) && isNumerico($3.tipo)) {
 			$$.traducao = $1.traducao + $3.traducao;
@@ -498,7 +492,6 @@ UNARIO : PRIMARIO { $$ = $1; }
 			yyerror("Operação de '-' unário não permitido para tipo " + $2.tipo);
 		}
 
-
 		$$.label = gerarTemporaria();
 		$$.tipo = $2.tipo;
 
@@ -548,6 +541,12 @@ PRIMARIO : PRIMITIVO {
 		$$.label = $1.label;
 		$$.tipo = $1.tipo;
 		$$.traducao = $1.traducao;
+	}
+	| '(' EXPRESSAO ')' {
+		debug("Expressão entre parênteses");
+		$$.tipo = $2.tipo;
+		$$.label = $2.label;
+		$$.traducao = $2.traducao;
 	}
 	| TK_ID {
 		Variavel *var = buscarVariavel($1.label);

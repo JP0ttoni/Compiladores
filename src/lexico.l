@@ -76,6 +76,7 @@ COMENTARIO "%%".*
 [+\-*/|\"]      { return *yytext;                           }
 [(){}[\]]       { return *yytext;                           }
 [;,~:=%]        { return *yytext;                           }
+"?"             { return *yytext;                           }
 
 {CHAR}          { yylval.label = yytext; return TK_CHAR;    }
 {STRING}        { yylval.label = yytext; return TK_STRING;  }

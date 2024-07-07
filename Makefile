@@ -4,7 +4,7 @@ PARSER := yacc
 PARSER_PARAMS := -d src/sintatico.y -o output/y.tab.c -Wcounterexamples -v
 
 all: compile
-	./output/compiler.exe --debug --simplify < examples/exemplo.jsm
+	./output/compiler.exe < examples/exemplo.jsm
 
 compile:
 		mkdir -p output

@@ -596,8 +596,9 @@ namespace app {
      */
 
     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+        string apelidoReal = temporaria ? "#" + apelido : apelido;
         Contexto* contexto = pilhaContextos.back();
-        Variavel* variavel = contexto->criarVariavel(nome, apelido, tipo);
+        Variavel* variavel = contexto->criarVariavel(nome, apelidoReal, tipo);
         tabelaSimbolosVariaveis.push_back(variavel);
         return variavel;
     }
@@ -618,7 +619,7 @@ namespace app {
 
             if (parametro != NULL) {
                 Variavel* fakeVariavel = new Variavel(parametro->getNome(), apelido, parametro->getTipo());
-                return parametro->getAsVariavel();
+                return fakeVariavel;
             }
         }
 

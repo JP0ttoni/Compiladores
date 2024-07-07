@@ -53,6 +53,7 @@ String concatenarString(String s1, String s2) {
 
     String result;
 
+    result.str = (char*) malloc(tamanhoReal);
     result.tamanho = tamanhoReal;
 
     int indice;
