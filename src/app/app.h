@@ -76,112 +76,6 @@ namespace app {
         return "label" + to_string(contadorLabel++);
     }
 
-    class Variavel {
-        private:
-            string nome;
-            string apelido;
-            string tipo;
-        public:
-            Variavel(string nome, string apelido, string tipo) {
-                this->nome = nome;
-                this->apelido = apelido;
-                this->tipo = tipo;
-            }
-
-            string getNome() {
-                return this->nome;
-            }
-
-            string getApelido() {
-                return this->apelido;
-            }
-
-            string getTipo() {
-                return this->tipo;
-            }
-    };
-
-    Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria = false);
-
-    class Contexto {
-        private:
-            list<Variavel*> variaveis;
-            bool hasLastReturn = false;
-        public:
-            Contexto() {
-                this->variaveis = list<Variavel*>();
-            }
-
-            void setHasReturn(bool hasReturn) {
-                this->hasLastReturn = hasReturn;
-            }
-
-            bool hasReturn() {
-                return this->hasLastReturn;
-            }
-
-            /**
-             * Cria uma variável na tabela de símbolos
-             * 
-             * @param nome - Nome da variável
-             * @param apelido - Apelido da variável
-             * @param tipo - Tipo da variável
-             * 
-             * @return Variavel - Ponteiro para a variável criada
-             */
-
-            Variavel* criarVariavel(string nome, string apelido, string tipo) {
-                for (list<Variavel*>::iterator it = this->variaveis.begin(); it != this->variaveis.end(); ++it) {
-                    if ((*it)->getApelido() == apelido) {
-                        yyerror("Variável asdasd " + nome + " já foi declarada");
-                    }
-                }
-
-                debug("Criando variável " + nome + " do tipo " + tipo + " com apelido " + apelido);
-
-                Variavel *variavel = new Variavel(nome, apelido, tipo);
-                this->variaveis.push_back(variavel);
-                return variavel;
-            }
-
-            /**
-             * Busca uma variável na tabela de símbolos pelo apelido
-             * 
-             * @param apelido - Apelido da variável
-             * 
-             * @return Variavel - Ponteiro para a variável encontrada
-             */
-
-            Variavel* buscarVariavel(string apelido) {
-                for (list<Variavel*>::iterator it = this->variaveis.begin(); it != this->variaveis.end(); ++it) {
-                    if ((*it)->getApelido() == apelido) {
-                        return *it;
-                    }
-                }
-
-                return NULL;
-            }
-    };
-
-    class BreakContinue {
-        private:
-            string inicioLabel;
-            string fimLabel;
-        public:
-            BreakContinue(string inicioLabel, string fimLabel) {
-                this->inicioLabel = inicioLabel;
-                this->fimLabel = fimLabel;
-            }
-
-            string getInicioLabel() {
-                return this->inicioLabel;
-            }
-
-            string getFimLabel() {
-                return this->fimLabel;
-            }
-    };
-
     class Parametro {
         private:
             string nome;
@@ -283,6 +177,128 @@ namespace app {
 
             list<Parametro*> getParametros() {
                 return this->parametros;
+            }
+    };
+
+    Funcao* getFuncaoDefinindo();
+
+    class Variavel {
+        private:
+            string nome;
+            string apelido;
+            string tipo;
+        public:
+            Variavel(string nome, string apelido, string tipo) {
+                this->nome = nome;
+                this->apelido = apelido;
+                this->tipo = tipo;
+            }
+
+            string getNome() {
+                return this->nome;
+            }
+
+            string getApelido() {
+                return this->apelido;
+            }
+
+            string getTipo() {
+                return this->tipo;
+            }
+    };
+
+    Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria = false);
+
+    class Contexto {
+        private:
+            list<Variavel*> variaveis;
+            bool hasLastReturn = false;
+        public:
+            Contexto() {
+                this->variaveis = list<Variavel*>();
+            }
+
+            void setHasReturn(bool hasReturn) {
+                this->hasLastReturn = hasReturn;
+            }
+
+            bool hasReturn() {
+                return this->hasLastReturn;
+            }
+
+            /**
+             * Cria uma variável na tabela de símbolos
+             * 
+             * @param nome - Nome da variável
+             * @param apelido - Apelido da variável
+             * @param tipo - Tipo da variável
+             * 
+             * @return Variavel - Ponteiro para a variável criada
+             */
+
+            Variavel* criarVariavel(string nome, string apelido, string tipo) {
+                for (list<Variavel*>::iterator it = this->variaveis.begin(); it != this->variaveis.end(); ++it) {
+                    if ((*it)->getApelido() == apelido) {
+                        yyerror("Variável " + apelido + " já foi declarada");
+                    }
+                }
+
+                debug("Criando variável " + nome + " do tipo " + tipo + " com apelido " + apelido);
+
+                Variavel *variavel = new Variavel(nome, apelido, tipo);
+                this->variaveis.push_back(variavel);
+                return variavel;
+            }
+
+            /**
+             * Busca uma variável na tabela de símbolos pelo apelido
+             * 
+             * @param apelido - Apelido da variável
+             * 
+             * @return Variavel - Ponteiro para a variável encontrada
+             */
+
+            Variavel* buscarVariavel(string apelido) {
+                Funcao* funcao = getFuncaoDefinindo();
+
+                string nome = "";
+                string tipo = "";
+
+                if (funcao != NULL) {
+                    Parametro* parametro = funcao->getParametroByName(apelido);
+
+                    if (parametro != NULL) {
+                        Variavel* fakeVariavel = new Variavel(apelido, apelido, parametro->getTipo());
+                        return fakeVariavel;
+                    }
+                }
+
+                for (list<Variavel*>::iterator it = this->variaveis.begin(); it != this->variaveis.end(); ++it) {
+                    if ((*it)->getApelido() == apelido) {
+                        return *it;
+                    }
+                }
+
+                return NULL;
+            }
+    };
+
+    class BreakContinue {
+        private:
+            string inicioLabel;
+            string fimLabel;
+        public:
+            BreakContinue(string inicioLabel, string fimLabel) {
+                this->inicioLabel = inicioLabel;
+                this->fimLabel = fimLabel;
+            }
+
+            string getInicioLabel() {
+                return this->inicioLabel;
+            }
+
+            string getFimLabel() {
+                return this->fimLabel;
             }
     };
 

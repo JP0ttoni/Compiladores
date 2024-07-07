@@ -201,8 +201,6 @@ DECLARACAO_VARIAVEL: TK_VAR TK_ID '=' EXPRESSAO {
 		yyerror("A variável " + $2.label + " está recebendo uma expressão do tipo void...");
 	}
 
-	Variavel *var = buscarVariavel($2.label);
-
 	criarVariavel($$.label, $2.label, $4.tipo);
 
 	$$.traducao = $4.traducao;
@@ -552,41 +550,18 @@ PRIMARIO : PRIMITIVO {
 		$$.traducao = $1.traducao;
 	}
 	| TK_ID {
-		Funcao* funcao = getFuncaoDefinindo();
+		Variavel *var = buscarVariavel($1.label);
 
-		string nome = "";
-		string tipo = "";
-
-		if (funcao != NULL) {
-			Parametro* parametro = funcao->getParametroByName($1.label);
-
-			if (parametro != NULL) {
-				nome = parametro->getNome();
-				tipo = parametro->getTipo();
-				debug("Usando variável (parâmetro) " + $1.label + "...");
-			}
+		if (var == NULL) {
+			yyerror("Variável " + $1.label + " não declarada");
 		}
 
-		if (empty(nome)) {
-			Variavel *var = buscarVariavel($1.label);
-
-			if (var == NULL) {
-				yyerror("Variável " + $1.label + " não declarada");
-			}
-
-			if (var->getTipo() == "void") {
-				yyerror("Variável " + $1.label + " não pode ser usada como expressão");
-			}
-
-			nome = var->getNome();
-			tipo = var->getTipo();
-
-			debug("Usando variável " + $1.label + "...");
+		if (var->getTipo() == "void") {
+			yyerror("Variável " + $1.label + " não pode ser usada como expressão");
 		}
 
-
-		$$.label = nome;
-		$$.tipo = tipo;
+		$$.label = var->getNome();
+		$$.tipo = var->getTipo();
 	}
 
 PRIMITIVO: TK_INTEIRO {
