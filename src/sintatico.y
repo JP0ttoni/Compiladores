@@ -235,6 +235,62 @@ ATRIBUICAO: TK_ID '=' EXPRESSAO {
 			$$.traducao += $$.label + " = " + $3.label + ";\n";
 		} 
 	}
+	| TK_ID TK_MAIS_IGUAL EXPRESSAO {
+		debug("Atribuição de soma à variável " + $1.label);
+
+		Variavel *var = buscarVariavel($1.label);
+
+		if (var == NULL) {
+			yyerror("Variável " + $1.label + " não declarada");
+		}
+
+		if (!isNumerico(var->getTipo()) || !isNumerico($3.tipo)) {
+			yyerror("Operação de soma não permitida para tipos " + var->getTipo() + " e " + $3.tipo);
+		}
+
+		Atributo atributo;
+
+		$$.tipo = var->getTipo();
+		$$.label = var->getNome();
+		$$.traducao = $3.traducao;
+
+		atributo.tipo = var->getTipo();
+		atributo.label = var->getNome();
+		atributo.traducao = "";
+
+		string label1 = converter(atributo, $$.tipo, $$.traducao);
+		string label2 = converter($3, $$.tipo, $$.traducao);
+
+		$$.traducao += $$.label + " = " + label1 + " + " + label2 + ";\n";
+	}
+	| TK_ID TK_MENOS_IGUAL EXPRESSAO {
+		debug("Atribuição de subtração à variável " + $1.label);
+
+		Variavel *var = buscarVariavel($1.label);
+
+		if (var == NULL) {
+			yyerror("Variável " + $1.label + " não declarada");
+		}
+
+		if (!isNumerico(var->getTipo()) || !isNumerico($3.tipo)) {
+			yyerror("Operação de subtração não permitida para tipos " + var->getTipo() + " e " + $3.tipo);
+		}
+
+		Atributo atributo;
+
+		$$.tipo = var->getTipo();
+		$$.label = var->getNome();
+		$$.traducao = $3.traducao;
+
+		atributo.tipo = var->getTipo();
+		atributo.label = var->getNome();
+		atributo.traducao = "";
+
+		string label1 = converter(atributo, $$.tipo, $$.traducao);
+		string label2 = converter($3, $$.tipo, $$.traducao);
+
+		$$.traducao += $$.label + " = " + label1 + " - " + label2 + ";\n";
+	}
 
 EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 	| EXPRESSAO '+' TERMO {
