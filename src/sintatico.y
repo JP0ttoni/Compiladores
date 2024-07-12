@@ -1,16 +1,16 @@
 %{
-#include "../src/app/app.h"
+#include "../src/app/compilador.h"
 
 #define YYSTYPE Atributo
 
-using namespace app;
+using namespace compilador;
 
 int yylex(void);
 
 %}
 
 %token TK_TIPO TK_INTEIRO TK_REAL TK_STRING TK_CHAR
-%token TK_ID
+%token TK_ID TK_MAIS_IGUAL TK_MENOS_IGUAL TK_VEZES_IGUAL TK_DIV_IGUAL
 %token TK_VAR TK_AS
 %token TK_DIV TK_MENOS_MENOS TK_MAIS_MAIS
 %token TK_TRUE TK_FALSE
@@ -310,7 +310,18 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 
 		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
-		$$.traducao += $$.label + " = " + $1.label + " == " + $3.label + ";\n";
+		if (isNumerico($1.tipo) && isNumerico($3.tipo)) {
+			string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+
+			string label1 = converter($1, tipo, $$.traducao);
+			string label2 = converter($3, tipo, $$.traducao);
+
+			$$.traducao += $$.label + " = " + label1 + " == " + label2 + ";\n";
+		} else if ($1.tipo == STRING_TIPO) {
+			$$.traducao += $$.label + " = igualdadeStrings(" + $1.label + "," + $3.label + ");\n";
+		} else {
+			$$.traducao += $$.label + " = " + $1.label + " == " + $3.label + ";\n";
+		}
 	}
 	| EXPRESSAO TK_DIFERENTE EXPRESSAO {
 		if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
@@ -326,7 +337,19 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 
 		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
-		$$.traducao += $$.label + " = " + $1.label + " != " + $3.label + ";\n";
+		if (isNumerico($1.tipo) && isNumerico($3.tipo)) {
+			string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+
+			string label1 = converter($1, tipo, $$.traducao);
+			string label2 = converter($3, tipo, $$.traducao);
+
+			$$.traducao += $$.label + " = " + label1 + " != " + label2 + ";\n";
+		} else if ($1.tipo == STRING_TIPO) {
+			$$.traducao += $$.label + " = igualdadeStrings(" + $1.label + "," + $3.label + ");\n";
+			$$.traducao += $$.label + " = !" + $$.label + ";\n";
+		} else {
+			$$.traducao += $$.label + " = " + $1.label + " != " + $3.label + ";\n";
+		}
 	}
 	| EXPRESSAO TK_MAIOR EXPRESSAO {
 		if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
@@ -335,8 +358,10 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 
 		$$.traducao = $1.traducao + $3.traducao;
 
-		string label1 = converter($1, INT_TIPO, $$.traducao);
-		string label2 = converter($3, INT_TIPO, $$.traducao);
+		string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+
+		string label1 = converter($1, tipo, $$.traducao);
+		string label2 = converter($3, tipo, $$.traducao);
 
 		$$.label = gerarTemporaria();
 		$$.tipo = BOOL_TIPO;
@@ -352,8 +377,10 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 
 		$$.traducao = $1.traducao + $3.traducao;
 
-		string label1 = converter($1, INT_TIPO, $$.traducao);
-		string label2 = converter($3, INT_TIPO, $$.traducao);
+		string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+
+		string label1 = converter($1, tipo, $$.traducao);
+		string label2 = converter($3, tipo, $$.traducao);
 
 		$$.label = gerarTemporaria();
 		$$.tipo = BOOL_TIPO;
@@ -369,8 +396,10 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 
 		$$.traducao = $1.traducao + $3.traducao;
 
-		string label1 = converter($1, INT_TIPO, $$.traducao);
-		string label2 = converter($3, INT_TIPO, $$.traducao);
+		string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+
+		string label1 = converter($1, tipo, $$.traducao);
+		string label2 = converter($3, tipo, $$.traducao);
 
 		$$.label = gerarTemporaria();
 		$$.tipo = BOOL_TIPO;
@@ -386,8 +415,10 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 
 		$$.traducao = $1.traducao + $3.traducao;
 
-		string label1 = converter($1, INT_TIPO, $$.traducao);
-		string label2 = converter($3, INT_TIPO, $$.traducao);
+		string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+
+		string label1 = converter($1, tipo, $$.traducao);
+		string label2 = converter($3, tipo, $$.traducao);
 
 		$$.label = gerarTemporaria();
 		$$.tipo = BOOL_TIPO;

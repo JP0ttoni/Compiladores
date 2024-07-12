@@ -1,0 +1,2321 @@
+src/sintatico.y:6:17: error: ‘app’ is not a namespace-name
+    6 | using namespace app;
+      |                 ^~~
+src/sintatico.y:4:17: error: ‘Atributo’ does not name a type
+    4 | #define YYSTYPE Atributo
+      |                 ^~~~~~~~
+output/y.tab.h:158:8: note: in expansion of macro ‘YYSTYPE’
+  158 | extern YYSTYPE yylval;
+      |        ^~~~~~~
+src/sintatico.y:4:17: error: ‘Atributo’ has not been declared
+    4 | #define YYSTYPE Atributo
+      |                 ^~~~~~~~
+output/y.tab.c:1064:37: note: in expansion of macro ‘YYSTYPE’
+ 1064 |             yysymbol_kind_t yykind, YYSTYPE *yyvaluep)
+      |                                     ^~~~~~~
+src/sintatico.y:4:17: error: ‘Atributo’ does not name a type
+    4 | #define YYSTYPE Atributo
+      |                 ^~~~~~~~
+output/y.tab.c:1081:1: note: in expansion of macro ‘YYSTYPE’
+ 1081 | YYSTYPE yylval;
+      | ^~~~~~~
+output/y.tab.c: In function ‘int yyparse()’:
+src/sintatico.y:4:17: error: ‘Atributo’ was not declared in this scope; did you mean ‘compilador::Atributo’?
+    4 | #define YYSTYPE Atributo
+      |                 ^~~~~~~~
+output/y.tab.c:1111:5: note: in expansion of macro ‘YYSTYPE’
+ 1111 |     YYSTYPE yyvsa[YYINITDEPTH];
+      |     ^~~~~~~
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:36:7: note: ‘compilador::Atributo’ declared here
+   36 |     } Atributo;
+      |       ^~~~~~~~
+output/y.tab.c:1112:14: error: ‘yyvs’ was not declared in this scope; did you mean ‘yyss’?
+ 1112 |     YYSTYPE *yyvs = yyvsa;
+      |              ^~~~
+      |              yyss
+output/y.tab.c:1112:21: error: ‘yyvsa’ was not declared in this scope; did you mean ‘yyssa’?
+ 1112 |     YYSTYPE *yyvs = yyvsa;
+      |                     ^~~~~
+      |                     yyssa
+output/y.tab.c:1113:14: error: ‘yyvsp’ was not declared in this scope; did you mean ‘yyssp’?
+ 1113 |     YYSTYPE *yyvsp = yyvs;
+      |              ^~~~~
+      |              yyssp
+output/y.tab.c:1122:11: error: expected ‘;’ before ‘yyval’
+ 1122 |   YYSTYPE yyval;
+      |           ^~~~~
+output/y.tab.c:1295:14: error: ‘yylval’ was not declared in this scope
+ 1295 |   *++yyvsp = yylval;
+      |              ^~~~~~
+output/y.tab.c:1328:3: error: ‘yyval’ was not declared in this scope
+ 1328 |   yyval = yyvsp[1-yylen];
+      |   ^~~~~
+src/sintatico.y:35:16: error: ‘iniciarCompilador’ was not declared in this scope; did you mean ‘compilador::iniciarCompilador’?
+   35 | S : COMANDOS { iniciarCompilador($1.traducao); }
+      |                ^~~~~~~~~~~~~~~~~
+      |                compilador::iniciarCompilador
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:536:10: note: ‘compilador::iniciarCompilador’ declared here
+  536 |     void iniciarCompilador(string traducaoGeral) {
+      |          ^~~~~~~~~~~~~~~~~
+src/sintatico.y:40:77: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+   40 | COMANDO: CRIAR_CONTEXTO COMANDOS '}' { $$.traducao = $2.traducao; debug("Removendo contexto"); removerContexto(); }
+      |                                                                             ^~~~~
+      |                                                                             compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:40:106: error: ‘removerContexto’ was not declared in this scope; did you mean ‘compilador::removerContexto’?
+   40 | COMANDO: CRIAR_CONTEXTO COMANDOS '}' { $$.traducao = $2.traducao; debug("Removendo contexto"); removerContexto(); }
+      |                                                                                                          ^~~~~~~~~~     
+      |                                                                                                          compilador::removerContexto
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:492:10: note: ‘compilador::removerContexto’ declared here
+  492 |     void removerContexto() {
+      |          ^~~~~~~~~~~~~~~
+src/sintatico.y:52:17: error: ‘BreakContinue’ was not declared in this scope; did you mean ‘compilador::BreakContinue’?
+   52 |                 BreakContinue* topo = topoBreakContinue();
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::BreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:281:11: note: ‘compilador::BreakContinue’ declared here
+  281 |     class BreakContinue {
+      |           ^~~~~~~~~~~~~
+src/sintatico.y:52:32: error: ‘topo’ was not declared in this scope
+   52 |                 BreakContinue* topo = topoBreakContinue();
+      |                                ^~~~
+src/sintatico.y:52:39: error: ‘topoBreakContinue’ was not declared in this scope; did you mean ‘compilador::topoBreakContinue’?
+   52 |                 BreakContinue* topo = topoBreakContinue();
+      |                                       ^~~~~~~~~~~~~~~~~
+      |                                       compilador::topoBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:516:20: note: ‘compilador::topoBreakContinue’ declared here
+  516 |     BreakContinue* topoBreakContinue() {
+      |                    ^~~~~~~~~~~~~~~~~
+src/sintatico.y:55:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+   55 |                         yyerror("Comando break fora de loop");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:61:17: error: ‘BreakContinue’ was not declared in this scope; did you mean ‘compilador::BreakContinue’?
+   61 |                 BreakContinue* topo = topoContinue();
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::BreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:281:11: note: ‘compilador::BreakContinue’ declared here
+  281 |     class BreakContinue {
+      |           ^~~~~~~~~~~~~
+src/sintatico.y:61:32: error: ‘topo’ was not declared in this scope
+   61 |                 BreakContinue* topo = topoContinue();
+      |                                ^~~~
+src/sintatico.y:61:39: error: ‘topoContinue’ was not declared in this scope; did you mean ‘compilador::topoContinue’?
+   61 |                 BreakContinue* topo = topoContinue();
+      |                                       ^~~~~~~~~~~~
+      |                                       compilador::topoContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:520:20: note: ‘compilador::topoContinue’ declared here
+  520 |     BreakContinue* topoContinue() {
+      |                    ^~~~~~~~~~~~
+src/sintatico.y:64:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+   64 |                         yyerror("Comando continue fora de loop");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:71:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+   71 |                 debug("Criando novo contexto...");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:72:17: error: ‘criarContexto’ was not declared in this scope; did you mean ‘compilador::criarContexto’?
+   72 |                 criarContexto();
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarContexto
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:481:15: note: ‘compilador::criarContexto’ declared here
+  481 |     Contexto* criarContexto() {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:78:39: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+   78 |                 if ($3.tipo != BOOL_TIPO) {
+      |                                       ^~~~~    
+      |                                       compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:79:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+   79 |                         yyerror("Condição do if deve ser do tipo bool");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:82:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+   82 |                 string temp = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:83:34: error: ‘gerarLabel’ was not declared in this scope; did you mean ‘compilador::gerarLabel’?
+   83 |                 string ifLabel = gerarLabel();
+      |                                  ^~~~~~~~~~
+      |                                  compilador::gerarLabel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:77:12: note: ‘compilador::gerarLabel’ declared here
+   77 |     string gerarLabel() {
+      |            ^~~~~~~~~~
+src/sintatico.y:85:43: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+   85 |                 criarVariavel(temp, temp, BOOL_TIPO, true);
+      |                                           ^~~~~~~~~
+      |                                           compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:85:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+   85 |                 criarVariavel(temp, temp, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:90:39: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+   90 |                 if ($3.tipo != BOOL_TIPO) {
+      |                                       ^~~~~    
+      |                                       compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:91:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+   91 |                         yyerror("Condição do if deve ser do tipo bool");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:94:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+   94 |                 string temp = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:95:34: error: ‘gerarLabel’ was not declared in this scope; did you mean ‘compilador::gerarLabel’?
+   95 |                 string ifLabel = gerarLabel();
+      |                                  ^~~~~~~~~~
+      |                                  compilador::gerarLabel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:77:12: note: ‘compilador::gerarLabel’ declared here
+   77 |     string gerarLabel() {
+      |            ^~~~~~~~~~
+src/sintatico.y:98:43: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+   98 |                 criarVariavel(temp, temp, BOOL_TIPO, true);
+      |                                           ^~~~~~~~~
+      |                                           compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:98:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+   98 |                 criarVariavel(temp, temp, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:104:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  104 |                 debug("Comando de loop while");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:106:39: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  106 |                 if ($3.tipo != BOOL_TIPO) {
+      |                                       ^~~~~    
+      |                                       compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:107:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  107 |                         yyerror("Condição do while deve ser do tipo bool");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:110:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  110 |                 string temp = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:111:17: error: ‘BreakContinue’ was not declared in this scope; did you mean ‘compilador::BreakContinue’?
+  111 |                 BreakContinue* topo = topoBreakContinue();
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::BreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:281:11: note: ‘compilador::BreakContinue’ declared here
+  281 |     class BreakContinue {
+      |           ^~~~~~~~~~~~~
+src/sintatico.y:111:32: error: ‘topo’ was not declared in this scope
+  111 |                 BreakContinue* topo = topoBreakContinue();
+      |                                ^~~~
+src/sintatico.y:111:39: error: ‘topoBreakContinue’ was not declared in this scope; did you mean ‘compilador::topoBreakContinue’?
+  111 |                 BreakContinue* topo = topoBreakContinue();
+      |                                       ^~~~~~~~~~~~~~~~~
+      |                                       compilador::topoBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:516:20: note: ‘compilador::topoBreakContinue’ declared here
+  516 |     BreakContinue* topoBreakContinue() {
+      |                    ^~~~~~~~~~~~~~~~~
+src/sintatico.y:116:43: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  116 |                 criarVariavel(temp, temp, BOOL_TIPO, true);
+      |                                           ^~~~~~~~~
+      |                                           compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:116:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  116 |                 criarVariavel(temp, temp, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:119:17: error: ‘removerBreakContinue’ was not declared in this scope; did you mean ‘compilador::removerBreakContinue’?
+  119 |                 removerBreakContinue();
+      |                 ^~~~~~~~~~~~~~~~~~~~
+      |                 compilador::removerBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:530:20: note: ‘compilador::removerBreakContinue’ declared here
+  530 |     BreakContinue* removerBreakContinue() {
+      |                    ^~~~~~~~~~~~~~~~~~~~
+src/sintatico.y:122:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  122 |                 debug("Comando do-while");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:124:39: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  124 |                 if ($5.tipo != BOOL_TIPO) {
+      |                                       ^~~~~    
+      |                                       compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:125:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  125 |                         yyerror("Condição do while deve ser do tipo bool");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:128:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  128 |                 string temp = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:129:17: error: ‘BreakContinue’ was not declared in this scope; did you mean ‘compilador::BreakContinue’?
+  129 |                 BreakContinue* topo = topoBreakContinue();
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::BreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:281:11: note: ‘compilador::BreakContinue’ declared here
+  281 |     class BreakContinue {
+      |           ^~~~~~~~~~~~~
+src/sintatico.y:129:32: error: ‘topo’ was not declared in this scope
+  129 |                 BreakContinue* topo = topoBreakContinue();
+      |                                ^~~~
+src/sintatico.y:129:39: error: ‘topoBreakContinue’ was not declared in this scope; did you mean ‘compilador::topoBreakContinue’?
+  129 |                 BreakContinue* topo = topoBreakContinue();
+      |                                       ^~~~~~~~~~~~~~~~~
+      |                                       compilador::topoBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:516:20: note: ‘compilador::topoBreakContinue’ declared here
+  516 |     BreakContinue* topoBreakContinue() {
+      |                    ^~~~~~~~~~~~~~~~~
+src/sintatico.y:134:43: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  134 |                 criarVariavel(temp, temp, BOOL_TIPO, true);
+      |                                           ^~~~~~~~~
+      |                                           compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:134:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  134 |                 criarVariavel(temp, temp, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:137:17: error: ‘removerBreakContinue’ was not declared in this scope; did you mean ‘compilador::removerBreakContinue’?
+  137 |                 removerBreakContinue();
+      |                 ^~~~~~~~~~~~~~~~~~~~
+      |                 compilador::removerBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:530:20: note: ‘compilador::removerBreakContinue’ declared here
+  530 |     BreakContinue* removerBreakContinue() {
+      |                    ^~~~~~~~~~~~~~~~~~~~
+src/sintatico.y:140:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  140 |                 debug("Comando de loop for");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:142:39: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  142 |                 if ($5.tipo != BOOL_TIPO) {
+      |                                       ^~~~~    
+      |                                       compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:143:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  143 |                         yyerror("Condição do for deve ser do tipo bool");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:146:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  146 |                 string temp = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:148:17: error: ‘BreakContinue’ was not declared in this scope; did you mean ‘compilador::BreakContinue’?
+  148 |                 BreakContinue* topo = topoBreakContinue();
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::BreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:281:11: note: ‘compilador::BreakContinue’ declared here
+  281 |     class BreakContinue {
+      |           ^~~~~~~~~~~~~
+src/sintatico.y:148:32: error: ‘topo’ was not declared in this scope
+  148 |                 BreakContinue* topo = topoBreakContinue();
+      |                                ^~~~
+src/sintatico.y:148:39: error: ‘topoBreakContinue’ was not declared in this scope; did you mean ‘compilador::topoBreakContinue’?
+  148 |                 BreakContinue* topo = topoBreakContinue();
+      |                                       ^~~~~~~~~~~~~~~~~
+      |                                       compilador::topoBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:516:20: note: ‘compilador::topoBreakContinue’ declared here
+  516 |     BreakContinue* topoBreakContinue() {
+      |                    ^~~~~~~~~~~~~~~~~
+src/sintatico.y:153:43: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  153 |                 criarVariavel(temp, temp, BOOL_TIPO, true);
+      |                                           ^~~~~~~~~
+      |                                           compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:153:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  153 |                 criarVariavel(temp, temp, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:156:17: error: ‘removerBreakContinue’ was not declared in this scope; did you mean ‘compilador::removerBreakContinue’?
+  156 |                 removerBreakContinue();
+      |                 ^~~~~~~~~~~~~~~~~~~~
+      |                 compilador::removerBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:530:20: note: ‘compilador::removerBreakContinue’ declared here
+  530 |     BreakContinue* removerBreakContinue() {
+      |                    ^~~~~~~~~~~~~~~~~~~~
+src/sintatico.y:160:37: error: ‘gerarLabel’ was not declared in this scope; did you mean ‘compilador::gerarLabel’?
+  160 |                 string whileLabel = gerarLabel();
+      |                                     ^~~~~~~~~~
+      |                                     compilador::gerarLabel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:77:12: note: ‘compilador::gerarLabel’ declared here
+   77 |     string gerarLabel() {
+      |            ^~~~~~~~~~
+src/sintatico.y:163:17: error: ‘adicionarBreakContinue’ was not declared in this scope; did you mean ‘compilador::adicionarBreakContinue’?
+  163 |                 adicionarBreakContinue(whileLabel, finalLabel);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                 compilador::adicionarBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:511:10: note: ‘compilador::adicionarBreakContinue’ declared here
+  511 |     void adicionarBreakContinue(string inicioLabel, string fimLabel) {
+      |          ^~~~~~~~~~~~~~~~~~~~~~
+src/sintatico.y:167:35: error: ‘gerarLabel’ was not declared in this scope; did you mean ‘compilador::gerarLabel’?
+  167 |                 string forLabel = gerarLabel();
+      |                                   ^~~~~~~~~~
+      |                                   compilador::gerarLabel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:77:12: note: ‘compilador::gerarLabel’ declared here
+   77 |     string gerarLabel() {
+      |            ^~~~~~~~~~
+src/sintatico.y:170:17: error: ‘adicionarBreakContinue’ was not declared in this scope; did you mean ‘compilador::adicionarBreakContinue’?
+  170 |                 adicionarBreakContinue(forLabel, finalLabel);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                 compilador::adicionarBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:511:10: note: ‘compilador::adicionarBreakContinue’ declared here
+  511 |     void adicionarBreakContinue(string inicioLabel, string fimLabel) {
+      |          ^~~~~~~~~~~~~~~~~~~~~~
+src/sintatico.y:174:34: error: ‘gerarLabel’ was not declared in this scope; did you mean ‘compilador::gerarLabel’?
+  174 |                 string doLabel = gerarLabel();
+      |                                  ^~~~~~~~~~
+      |                                  compilador::gerarLabel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:77:12: note: ‘compilador::gerarLabel’ declared here
+   77 |     string gerarLabel() {
+      |            ^~~~~~~~~~
+src/sintatico.y:177:17: error: ‘adicionarBreakContinue’ was not declared in this scope; did you mean ‘compilador::adicionarBreakContinue’?
+  177 |                 adicionarBreakContinue(doLabel, finalLabel);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                 compilador::adicionarBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:511:10: note: ‘compilador::adicionarBreakContinue’ declared here
+  511 |     void adicionarBreakContinue(string inicioLabel, string fimLabel) {
+      |          ^~~~~~~~~~~~~~~~~~~~~~
+src/sintatico.y:195:9: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  195 |         debug("Declarando variável " + $2.label + " do tipo " + $4.tipo);
+      |         ^~~~~
+      |         compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:197:23: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  197 |         $$.label = gerarTemporaria(false);
+      |                       ^~~~~~~~~~~~~~~
+      |                       compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:201:17: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  201 |                 yyerror("A variável " + $2.label + " está recebendo uma expressão do tipo void...");
+      |                 ^~~~~~~
+      |                 compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:204:9: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  204 |         criarVariavel($$.label, $2.label, $4.tipo);
+      |         ^~~~~~~~~~~~~
+      |         compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:208:30: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  208 |         if ($4.tipo == STRING_TIPO) {
+      |                              ^~~~~~~~   
+      |                              compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:216:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  216 |                 debug("Atribuindo valor à variável " + $1.label);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:218:17: error: ‘Variavel’ was not declared in this scope; did you mean ‘compilador::Variavel’?
+  218 |                 Variavel *var = buscarVariavel($1.label);
+      |                 ^~~~~~~~
+      |                 compilador::Variavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:194:11: note: ‘compilador::Variavel’ declared here
+  194 |     class Variavel {
+      |           ^~~~~~~~
+src/sintatico.y:218:27: error: ‘var’ was not declared in this scope
+  218 |                 Variavel *var = buscarVariavel($1.label);
+      |                           ^~~
+src/sintatico.y:218:33: error: ‘buscarVariavel’ was not declared in this scope; did you mean ‘compilador::buscarVariavel’?
+  218 |                 Variavel *var = buscarVariavel($1.label);
+      |                                 ^~~~~~~~~~~~~~
+      |                                 compilador::buscarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:616:15: note: ‘compilador::buscarVariavel’ declared here
+  616 |     Variavel* buscarVariavel(string apelido) {
+      |               ^~~~~~~~~~~~~~
+src/sintatico.y:221:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  221 |                         yyerror("Variável " + $1.label + " não declarada");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:225:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  225 |                         yyerror("Tipos incompatíveis na atribuição");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:232:38: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  232 |                 if ($3.tipo == STRING_TIPO) {
+      |                                      ^~~~~~~~   
+      |                                      compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:241:21: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  241 |                 if (isNumerico($1.tipo) && isNumerico($3.tipo)) {
+      |                     ^~~~~~~~~~
+      |                     compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:243:56: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  243 |                         $$.tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                        ^~~~~~~~~~
+      |                                                        compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:243:113: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  243 |                         $$.tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                                                                                 ^       
+      |                                                                                                                 compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:245:41: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  245 |                         string label1 = converter($1, $$.tipo, $$.traducao);
+      |                                         ^~~~~~~~~
+      |                                         compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:248:39: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  248 |                         $$.label = gerarTemporaria();
+      |                                       ^~~~~~~~~~~~~~~
+      |                                       compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:250:25: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  250 |                         criarVariavel($$.label, $$.label, $$.tipo, true);
+      |                         ^~~~~~~~~~~~~
+      |                         compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:253:46: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  253 |                 } else if ($1.tipo == STRING_TIPO || $3.tipo == STRING_TIPO) {
+      |                                              ^~~~~~~~~~~
+      |                                              compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:257:41: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  257 |                         string label1 = converter($1, STRING_TIPO, $$.traducao);
+      |                                         ^~~~~~~~~
+      |                                         compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:260:39: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  260 |                         $$.label = gerarTemporaria();
+      |                                       ^~~~~~~~~~~~~~~
+      |                                       compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:262:25: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  262 |                         criarVariavel($$.label, $$.label, STRING_TIPO, true);
+      |                         ^~~~~~~~~~~~~
+      |                         compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:266:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  266 |                         yyerror("Operação de soma/concatenação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:270:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  270 |                 if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:271:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  271 |                         yyerror("Operação de subtração não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:275:48: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  275 |                 $$.tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                ^~~~~~~~~~
+      |                                                compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:275:105: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  275 |                 $$.tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                                                                         ^       
+      |                                                                                                         compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:277:33: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  277 |                 string label1 = converter($1, $$.tipo, $$.traducao);
+      |                                 ^~~~~~~~~
+      |                                 compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:280:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  280 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:282:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  282 |                 criarVariavel($$.label, $$.label, $$.tipo, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:288:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  288 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:290:33: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  290 |                 string label1 = converter($1, BOOL_TIPO, $$.traducao);
+      |                                 ^~~~~~~~~
+      |                                 compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:293:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  293 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:295:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  295 |                 criarVariavel($$.label, $$.label, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:300:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  300 |                 if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:302:33: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  302 |                                 yyerror("Tipos incompatíveis na comparação");
+      |                                 ^~~~~~~
+      |                                 compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:308:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  308 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:309:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  309 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:311:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  311 |                 criarVariavel($$.label, $$.label, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:313:21: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  313 |                 if (isNumerico($1.tipo) && isNumerico($3.tipo)) {
+      |                     ^~~~~~~~~~
+      |                     compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:314:57: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  314 |                         string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                         ^~~~~~~~~~
+      |                                                         compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:314:114: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  314 |                         string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                                                                                  ^       
+      |                                                                                                                  compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:316:41: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  316 |                         string label1 = converter($1, tipo, $$.traducao);
+      |                                         ^~~~~~~~~
+      |                                         compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:320:46: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  320 |                 } else if ($1.tipo == STRING_TIPO) {
+      |                                              ^~~~~~~    
+      |                                              compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:327:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  327 |                 if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:329:33: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  329 |                                 yyerror("Tipos incompatíveis na comparação");
+      |                                 ^~~~~~~
+      |                                 compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:335:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  335 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:336:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  336 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:338:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  338 |                 criarVariavel($$.label, $$.label, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:340:21: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  340 |                 if (isNumerico($1.tipo) && isNumerico($3.tipo)) {
+      |                     ^~~~~~~~~~
+      |                     compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:341:57: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  341 |                         string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                         ^~~~~~~~~~
+      |                                                         compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:341:114: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  341 |                         string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                                                                                  ^       
+      |                                                                                                                  compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:343:41: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  343 |                         string label1 = converter($1, tipo, $$.traducao);
+      |                                         ^~~~~~~~~
+      |                                         compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:347:46: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  347 |                 } else if ($1.tipo == STRING_TIPO) {
+      |                                              ^~~~~~~    
+      |                                              compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:355:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  355 |                 if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:356:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  356 |                         yyerror("Operação de comparação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:361:49: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  361 |                 string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                 ^~~~~~~~~~
+      |                                                 compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:361:106: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  361 |                 string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                                                                          ^       
+      |                                                                                                          compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:363:33: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  363 |                 string label1 = converter($1, tipo, $$.traducao);
+      |                                 ^~~~~~~~~
+      |                                 compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:366:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  366 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:367:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  367 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:369:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  369 |                 criarVariavel($$.label, $$.label, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:374:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  374 |                 if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:375:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  375 |                         yyerror("Operação de comparação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:380:49: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  380 |                 string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                 ^~~~~~~~~~
+      |                                                 compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:380:106: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  380 |                 string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                                                                          ^       
+      |                                                                                                          compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:382:33: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  382 |                 string label1 = converter($1, tipo, $$.traducao);
+      |                                 ^~~~~~~~~
+      |                                 compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:385:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  385 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:386:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  386 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:388:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  388 |                 criarVariavel($$.label, $$.label, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:393:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  393 |                 if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:394:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  394 |                         yyerror("Operação de comparação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:399:49: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  399 |                 string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                 ^~~~~~~~~~
+      |                                                 compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:399:106: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  399 |                 string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                                                                          ^       
+      |                                                                                                          compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:401:33: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  401 |                 string label1 = converter($1, tipo, $$.traducao);
+      |                                 ^~~~~~~~~
+      |                                 compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:404:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  404 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:405:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  405 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:407:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  407 |                 criarVariavel($$.label, $$.label, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:412:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  412 |                 if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:413:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  413 |                         yyerror("Operação de comparação não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:418:49: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  418 |                 string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                 ^~~~~~~~~~
+      |                                                 compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:418:106: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  418 |                 string tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                                                                          ^       
+      |                                                                                                          compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:420:33: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  420 |                 string label1 = converter($1, tipo, $$.traducao);
+      |                                 ^~~~~~~~~
+      |                                 compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:423:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  423 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:424:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  424 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:426:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  426 |                 criarVariavel($$.label, $$.label, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:433:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  433 |                 if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:434:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  434 |                         yyerror("Operação de divisão não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:438:48: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  438 |                 $$.tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                ^~~~~~~~~~
+      |                                                compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:438:105: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  438 |                 $$.tipo = $1.tipo == FLOAT_TIPO || $3.tipo == FLOAT_TIPO ? FLOAT_TIPO : INT_TIPO;
+      |                                                                                                         ^       
+      |                                                                                                         compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:440:33: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  440 |                 string label1 = converter($1, $$.tipo, $$.traducao);
+      |                                 ^~~~~~~~~
+      |                                 compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:443:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  443 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:445:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  445 |                 criarVariavel($$.label, $$.label, $$.tipo, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:450:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  450 |                 if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:451:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  451 |                         yyerror("Operação de divisão não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:456:54: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  456 |                 string label1 = converter($1, INT_TIPO, $$.traducao);
+      |                                                      ^~~~~~~~
+      |                                                      compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:456:33: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  456 |                 string label1 = converter($1, INT_TIPO, $$.traducao);
+      |                                 ^~~~~~~~~
+      |                                 compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:459:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  459 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:462:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  462 |                 criarVariavel($$.label, $$.label, $$.tipo, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:467:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  467 |                 if (!isNumerico($1.tipo) || !isNumerico($3.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:468:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  468 |                         yyerror("Operação de divisão não permitida para tipos " + $1.tipo + " e " + $3.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:473:54: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  473 |                 string label1 = converter($1, FLOAT_TIPO, $$.traducao);
+      |                                                      ^~~~~~~~~~
+      |                                                      compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:473:33: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  473 |                 string label1 = converter($1, FLOAT_TIPO, $$.traducao);
+      |                                 ^~~~~~~~~
+      |                                 compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:476:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  476 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:479:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  479 |                 criarVariavel($$.label, $$.label, $$.tipo, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:485:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  485 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:487:33: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  487 |                 string label1 = converter($1, BOOL_TIPO, $$.traducao);
+      |                                 ^~~~~~~~~
+      |                                 compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:490:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  490 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:492:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  492 |                 criarVariavel($$.label, $$.label, BOOL_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:499:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  499 |                 debug("Conversão explícita de tipo do tipo " + $1.tipo + " para " + $3.label);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:501:32: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  501 |                 string label = converter($1, $3.label, $$.traducao);
+      |                                ^~~~~~~~~
+      |                                compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:506:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  506 |                 debug("Operação de '+' unário para tipo " + $2.tipo);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:508:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  508 |                 if (!isNumerico($2.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:509:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  509 |                         yyerror("Operação de '+' unário não permitido para tipo " + $2.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:512:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  512 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:515:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  515 |                 criarVariavel($$.label, $$.label, $$.tipo, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:520:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  520 |                 debug("Operação de '-' unário para tipo " + $2.tipo);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:522:22: error: ‘isNumerico’ was not declared in this scope; did you mean ‘compilador::isNumerico’?
+  522 |                 if (!isNumerico($2.tipo)) {
+      |                      ^~~~~~~~~~
+      |                      compilador::isNumerico
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:709:10: note: ‘compilador::isNumerico’ declared here
+  709 |     bool isNumerico(string tipo) {
+      |          ^~~~~~~~~~
+src/sintatico.y:523:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  523 |                         yyerror("Operação de '-' unário não permitido para tipo " + $2.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:526:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  526 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:529:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  529 |                 criarVariavel($$.label, $$.label, $$.tipo, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:534:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  534 |                 debug("Operação de 'not' unário para tipo " + $2.tipo);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:536:38: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  536 |                 if ($2.tipo != BOOL_TIPO) {
+      |                                      ^~~~~~   
+      |                                      compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:537:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  537 |                         yyerror("Operação de 'not' unário não permitido para tipo " + $2.tipo);
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:540:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  540 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:541:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  541 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:543:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  543 |                 criarVariavel($$.label, $$.label, $$.tipo, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:549:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  549 |                 debug ("Criando variável para o primitivo " + $1.label + " do tipo " + $1.tipo);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:551:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  551 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:554:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  554 |                 criarVariavel($$.label, $$.label, $$.tipo, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:556:38: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  556 |                 if ($1.tipo == STRING_TIPO) {
+      |                                      ^~~~~~~~   
+      |                                      compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:557:45: error: ‘fatiaString’ was not declared in this scope; did you mean ‘compilador::fatiaString’?
+  557 |                         string stringReal = fatiaString($1.label, "\"")[1];
+      |                                             ^~~~~~~~~~~
+      |                                             compilador::fatiaString
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:713:20: note: ‘compilador::fatiaString’ declared here
+  713 |     vector<string> fatiaString(string str, string del) {
+      |                    ^~~~~~~~~~~
+src/sintatico.y:577:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  577 |                 debug("Expressão entre parênteses");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:583:17: error: ‘Variavel’ was not declared in this scope; did you mean ‘compilador::Variavel’?
+  583 |                 Variavel *var = buscarVariavel($1.label);
+      |                 ^~~~~~~~
+      |                 compilador::Variavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:194:11: note: ‘compilador::Variavel’ declared here
+  194 |     class Variavel {
+      |           ^~~~~~~~
+src/sintatico.y:583:27: error: ‘var’ was not declared in this scope
+  583 |                 Variavel *var = buscarVariavel($1.label);
+      |                           ^~~
+src/sintatico.y:583:33: error: ‘buscarVariavel’ was not declared in this scope; did you mean ‘compilador::buscarVariavel’?
+  583 |                 Variavel *var = buscarVariavel($1.label);
+      |                                 ^~~~~~~~~~~~~~
+      |                                 compilador::buscarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:616:15: note: ‘compilador::buscarVariavel’ declared here
+  616 |     Variavel* buscarVariavel(string apelido) {
+      |               ^~~~~~~~~~~~~~
+src/sintatico.y:586:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  586 |                         yyerror("Variável " + $1.label + " não declarada");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:590:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  590 |                         yyerror("Variável " + $1.label + " não pode ser usada como expressão");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:598:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  598 |                 debug("Criado novo número inteiro " + $1.label);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:601:30: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  601 |                 $$.tipo = INT_TIPO;
+      |                              ^~~~~~  
+      |                              compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:604:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  604 |                 debug("Criado novo caractere " + $1.label);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:610:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  610 |                 debug("Criado nova string " + $1.label);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:613:30: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  613 |                 $$.tipo = STRING_TIPO;
+      |                              ^~~~~~~~~  
+      |                              compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:616:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  616 |                 debug("Criado novo número real " + $1.label);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:619:30: error: ‘FLOAT_TIPO’ was not declared in this scope; did you mean ‘compilador::FLOAT_TIPO’?
+  619 |                 $$.tipo = FLOAT_TIPO;
+      |                              ^~~~~~~~  
+      |                              compilador::FLOAT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:16:18: note: ‘compilador::FLOAT_TIPO’ declared here
+   16 |     const string FLOAT_TIPO = "float";
+      |                  ^~~~~~~~~~
+src/sintatico.y:622:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  622 |                 debug("Criado novo booleano true");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:625:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  625 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:628:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  628 |                 debug("Criado novo booleano false");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:631:30: error: ‘BOOL_TIPO’ was not declared in this scope; did you mean ‘compilador::BOOL_TIPO’?
+  631 |                 $$.tipo = BOOL_TIPO;
+      |                              ^~~~~~~  
+      |                              compilador::BOOL_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:17:18: note: ‘compilador::BOOL_TIPO’ declared here
+   17 |     const string BOOL_TIPO = "bool";
+      |                  ^~~~~~~~~
+src/sintatico.y:635:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  635 |                 debug("Comando de retorno de função");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:637:17: error: ‘Funcao’ was not declared in this scope; did you mean ‘compilador::Funcao’?
+  637 |                 Funcao* funcao = getFuncaoDefinindo();
+      |                 ^~~~~~
+      |                 compilador::Funcao
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:106:11: note: ‘compilador::Funcao’ declared here
+  106 |     class Funcao {
+      |           ^~~~~~
+src/sintatico.y:637:25: error: ‘funcao’ was not declared in this scope
+  637 |                 Funcao* funcao = getFuncaoDefinindo();
+      |                         ^~~~~~
+src/sintatico.y:637:34: error: ‘getFuncaoDefinindo’ was not declared in this scope; did you mean ‘compilador::getFuncaoDefinindo’?
+  637 |                 Funcao* funcao = getFuncaoDefinindo();
+      |                                  ^~~~~~~~~~~~~~~~~~
+      |                                  compilador::getFuncaoDefinindo
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:477:13: note: ‘compilador::getFuncaoDefinindo’ declared here
+  477 |     Funcao* getFuncaoDefinindo() {
+      |             ^~~~~~~~~~~~~~~~~~
+src/sintatico.y:640:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  640 |                         yyerror("Comando de retorno fora de função");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:644:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  644 |                         yyerror("A função " + funcao->getNome() + " foi declarada como void, então não pode ter retorno");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:648:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  648 |                         yyerror("Tipo de retorno incompatível com a função");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:651:17: error: ‘Contexto’ was not declared in this scope; did you mean ‘compilador::Contexto’?
+  651 |                 Contexto* contexto = topoContexto();
+      |                 ^~~~~~~~
+      |                 compilador::Contexto
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:221:11: note: ‘compilador::Contexto’ declared here
+  221 |     class Contexto {
+      |           ^~~~~~~~
+src/sintatico.y:651:27: error: ‘contexto’ was not declared in this scope; did you mean ‘constexpr’?
+  651 |                 Contexto* contexto = topoContexto();
+      |                           ^~~~~~~~
+      |                           constexpr
+src/sintatico.y:651:38: error: ‘topoContexto’ was not declared in this scope; did you mean ‘compilador::topoContexto’?
+  651 |                 Contexto* contexto = topoContexto();
+      |                                      ^~~~~~~~~~~~
+      |                                      compilador::topoContexto
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:488:15: note: ‘compilador::topoContexto’ declared here
+  488 |     Contexto* topoContexto() {
+      |               ^~~~~~~~~~~~
+src/sintatico.y:660:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  660 |                 debug("Comando de impressão");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:664:53: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  664 |                 string label = converter($3, STRING_TIPO, $$.traducao);
+      |                                                     ^~~~~~~~~~~
+      |                                                     compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:664:32: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  664 |                 string label = converter($3, STRING_TIPO, $$.traducao);
+      |                                ^~~~~~~~~
+      |                                compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:670:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  670 |                 debug("Comando de impressão com quebra de linha");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:674:53: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  674 |                 string label = converter($3, STRING_TIPO, $$.traducao);
+      |                                                     ^~~~~~~~~~~
+      |                                                     compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:674:32: error: ‘converter’ was not declared in this scope; did you mean ‘compilador::converter’?
+  674 |                 string label = converter($3, STRING_TIPO, $$.traducao);
+      |                                ^~~~~~~~~
+      |                                compilador::converter
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:661:12: note: ‘compilador::converter’ declared here
+  661 |     string converter(const Atributo &atributo, string tipoDestino, string &translation) {
+      |            ^~~~~~~~~
+src/sintatico.y:680:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  680 |                 debug("Comando de leitura");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:682:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  682 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:683:30: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  683 |                 $$.tipo = STRING_TIPO;
+      |                              ^~~~~~~~~  
+      |                              compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:685:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  685 |                 criarVariavel($$.label, $$.label, STRING_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:690:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  690 |                 debug("Comando de tamanho de string");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:692:31: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  692 |                 $$.label = gerarTemporaria();
+      |                               ^~~~~~~~~~~~~~~
+      |                               compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:693:30: error: ‘INT_TIPO’ was not declared in this scope; did you mean ‘compilador::INT_TIPO’?
+  693 |                 $$.tipo = INT_TIPO;
+      |                              ^~~~~~  
+      |                              compilador::INT_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:15:18: note: ‘compilador::INT_TIPO’ declared here
+   15 |     const string INT_TIPO = "int";
+      |                  ^~~~~~~~
+src/sintatico.y:695:17: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  695 |                 criarVariavel($$.label, $$.label, INT_TIPO, true);
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:699:39: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  699 |                 if ($3.tipo == STRING_TIPO) {
+      |                                       ^~~~~~~    
+      |                                       compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:708:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  708 |                 debug("Chamada de função");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:713:39: error: ‘fatiaString’ was not declared in this scope; did you mean ‘compilador::fatiaString’?
+  713 |                 vector<string> args = fatiaString(label, ", ");
+      |                                       ^~~~~~~~~~~
+      |                                       compilador::fatiaString
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:713:20: note: ‘compilador::fatiaString’ declared here
+  713 |     vector<string> fatiaString(string str, string del) {
+      |                    ^~~~~~~~~~~
+src/sintatico.y:731:17: error: ‘Funcao’ was not declared in this scope; did you mean ‘compilador::Funcao’?
+  731 |                 Funcao *funcao = buscarFuncao($1.label, argumentos);
+      |                 ^~~~~~
+      |                 compilador::Funcao
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:106:11: note: ‘compilador::Funcao’ declared here
+  106 |     class Funcao {
+      |           ^~~~~~
+src/sintatico.y:731:25: error: ‘funcao’ was not declared in this scope
+  731 |                 Funcao *funcao = buscarFuncao($1.label, argumentos);
+      |                         ^~~~~~
+src/sintatico.y:731:34: error: ‘buscarFuncao’ was not declared in this scope; did you mean ‘compilador::buscarFuncao’?
+  731 |                 Funcao *funcao = buscarFuncao($1.label, argumentos);
+      |                                  ^~~~~~~~~~~~
+      |                                  compilador::buscarFuncao
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:647:13: note: ‘compilador::buscarFuncao’ declared here
+  647 |     Funcao* buscarFuncao(string apelido, list<string> argumentos) {
+      |             ^~~~~~~~~~~~
+src/sintatico.y:734:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  734 |                         yyerror("Não existe nenhuma função com nome " + $1.label + " e argumentos dos tipos " + argumentosChamada + " (nesta na ordem).");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:744:39: error: ‘gerarTemporaria’ was not declared in this scope; did you mean ‘compilador::gerarTemporaria’?
+  744 |                         $$.label = gerarTemporaria();
+      |                                       ^~~~~~~~~~~~~~~
+      |                                       compilador::gerarTemporaria
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:65:12: note: ‘compilador::gerarTemporaria’ declared here
+   65 |     string gerarTemporaria(bool temp = true) {
+      |            ^~~~~~~~~~~~~~~
+src/sintatico.y:746:25: error: ‘criarVariavel’ was not declared in this scope; did you mean ‘compilador::criarVariavel’?
+  746 |                         criarVariavel($$.label, $$.label, $$.tipo, true);
+      |                         ^~~~~~~~~~~~~
+      |                         compilador::criarVariavel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:600:15: note: ‘compilador::criarVariavel’ declared here
+  600 |     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria) {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:748:53: error: ‘STRING_TIPO’ was not declared in this scope; did you mean ‘compilador::STRING_TIPO’?
+  748 |                         if (funcao->getRetorno() == STRING_TIPO) {
+      |                                                     ^~~~~~~~~~~
+      |                                                     compilador::STRING_TIPO
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:13:18: note: ‘compilador::STRING_TIPO’ declared here
+   13 |     const string STRING_TIPO = "String";
+      |                  ^~~~~~~~~~~
+src/sintatico.y:772:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  772 |                 debug("Definindo função " + $2.label);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:774:17: error: ‘Funcao’ was not declared in this scope; did you mean ‘compilador::Funcao’?
+  774 |                 Funcao* funcao = getFuncaoDefinindo();
+      |                 ^~~~~~
+      |                 compilador::Funcao
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:106:11: note: ‘compilador::Funcao’ declared here
+  106 |     class Funcao {
+      |           ^~~~~~
+src/sintatico.y:774:25: error: ‘funcao’ was not declared in this scope
+  774 |                 Funcao* funcao = getFuncaoDefinindo();
+      |                         ^~~~~~
+src/sintatico.y:774:34: error: ‘getFuncaoDefinindo’ was not declared in this scope; did you mean ‘compilador::getFuncaoDefinindo’?
+  774 |                 Funcao* funcao = getFuncaoDefinindo();
+      |                                  ^~~~~~~~~~~~~~~~~~
+      |                                  compilador::getFuncaoDefinindo
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:477:13: note: ‘compilador::getFuncaoDefinindo’ declared here
+  477 |     Funcao* getFuncaoDefinindo() {
+      |             ^~~~~~~~~~~~~~~~~~
+src/sintatico.y:782:25: error: ‘Contexto’ was not declared in this scope; did you mean ‘compilador::Contexto’?
+  782 |                         Contexto* contexto = topoContexto();
+      |                         ^~~~~~~~
+      |                         compilador::Contexto
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:221:11: note: ‘compilador::Contexto’ declared here
+  221 |     class Contexto {
+      |           ^~~~~~~~
+src/sintatico.y:782:35: error: ‘contexto’ was not declared in this scope; did you mean ‘constexpr’?
+  782 |                         Contexto* contexto = topoContexto();
+      |                                   ^~~~~~~~
+      |                                   constexpr
+src/sintatico.y:782:46: error: ‘topoContexto’ was not declared in this scope; did you mean ‘compilador::topoContexto’?
+  782 |                         Contexto* contexto = topoContexto();
+      |                                              ^~~~~~~~~~~~
+      |                                              compilador::topoContexto
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:488:15: note: ‘compilador::topoContexto’ declared here
+  488 |     Contexto* topoContexto() {
+      |               ^~~~~~~~~~~~
+src/sintatico.y:785:33: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  785 |                                 yyerror("A função " + $2.label + " precisa ter pelo menos 1 retorno no contexto principal");
+      |                                 ^~~~~~~
+      |                                 compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:789:17: error: ‘criarFuncao’ was not declared in this scope; did you mean ‘compilador::criarFuncao’?
+  789 |                 criarFuncao(funcao);
+      |                 ^~~~~~~~~~~
+      |                 compilador::criarFuncao
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:452:13: note: ‘compilador::criarFuncao’ declared here
+  452 |     Funcao* criarFuncao(Funcao *funcao) {
+      |             ^~~~~~~~~~~
+src/sintatico.y:790:17: error: ‘removeDefinicaoFuncao’ was not declared in this scope; did you mean ‘compilador::removeDefinicaoFuncao’?
+  790 |                 removeDefinicaoFuncao();
+      |                 ^~~~~~~~~~~~~~~~~~~~~
+      |                 compilador::removeDefinicaoFuncao
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:473:10: note: ‘compilador::removeDefinicaoFuncao’ declared here
+  473 |     void removeDefinicaoFuncao() {
+      |          ^~~~~~~~~~~~~~~~~~~~~
+src/sintatico.y:791:17: error: ‘removerContexto’ was not declared in this scope; did you mean ‘compilador::removerContexto’?
+  791 |                 removerContexto();
+      |                 ^~~~~~~~~~~~~~~
+      |                 compilador::removerContexto
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:492:10: note: ‘compilador::removerContexto’ declared here
+  492 |     void removerContexto() {
+      |          ^~~~~~~~~~~~~~~
+src/sintatico.y:795:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  795 |                 debug("Criando uma nova inicialização de uma função... " + $2.label);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:797:17: error: ‘criarContexto’ was not declared in this scope; did you mean ‘compilador::criarContexto’?
+  797 |                 criarContexto();
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::criarContexto
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:481:15: note: ‘compilador::criarContexto’ declared here
+  481 |     Contexto* criarContexto() {
+      |               ^~~~~~~~~~~~~
+src/sintatico.y:798:17: error: ‘criarDefinicaoFuncao’ was not declared in this scope; did you mean ‘compilador::criarDefinicaoFuncao’?
+  798 |                 criarDefinicaoFuncao($2.label, $1.label);
+      |                 ^~~~~~~~~~~~~~~~~~~~
+      |                 compilador::criarDefinicaoFuncao
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:443:13: note: ‘compilador::criarDefinicaoFuncao’ declared here
+  443 |     Funcao* criarDefinicaoFuncao(string nome, string retorno) {
+      |             ^~~~~~~~~~~~~~~~~~~~
+src/sintatico.y:808:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  808 |                 debug("Criando parâmetro " + $2.label + " do tipo " + $1.label);
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:810:17: error: ‘Funcao’ was not declared in this scope; did you mean ‘compilador::Funcao’?
+  810 |                 Funcao* funcao = getFuncaoDefinindo();
+      |                 ^~~~~~
+      |                 compilador::Funcao
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:106:11: note: ‘compilador::Funcao’ declared here
+  106 |     class Funcao {
+      |           ^~~~~~
+src/sintatico.y:810:25: error: ‘funcao’ was not declared in this scope
+  810 |                 Funcao* funcao = getFuncaoDefinindo();
+      |                         ^~~~~~
+src/sintatico.y:810:34: error: ‘getFuncaoDefinindo’ was not declared in this scope; did you mean ‘compilador::getFuncaoDefinindo’?
+  810 |                 Funcao* funcao = getFuncaoDefinindo();
+      |                                  ^~~~~~~~~~~~~~~~~~
+      |                                  compilador::getFuncaoDefinindo
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:477:13: note: ‘compilador::getFuncaoDefinindo’ declared here
+  477 |     Funcao* getFuncaoDefinindo() {
+      |             ^~~~~~~~~~~~~~~~~~
+src/sintatico.y:820:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  820 |                 debug("Comando switch-case");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:821:17: error: ‘Switch’ was not declared in this scope; did you mean ‘compilador::Switch’?
+  821 |                 Switch* sw = topoSwitch();
+      |                 ^~~~~~
+      |                 compilador::Switch
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:323:11: note: ‘compilador::Switch’ declared here
+  323 |     class Switch {
+      |           ^~~~~~
+src/sintatico.y:821:25: error: ‘sw’ was not declared in this scope
+  821 |                 Switch* sw = topoSwitch();
+      |                         ^~
+src/sintatico.y:821:30: error: ‘topoSwitch’ was not declared in this scope; did you mean ‘compilador::topoSwitch’?
+  821 |                 Switch* sw = topoSwitch();
+      |                              ^~~~~~~~~~
+      |                              compilador::topoSwitch
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:503:13: note: ‘compilador::topoSwitch’ declared here
+  503 |     Switch* topoSwitch() {
+      |             ^~~~~~~~~~
+src/sintatico.y:830:17: error: ‘removerSwitch’ was not declared in this scope; did you mean ‘compilador::removerSwitch’?
+  830 |                 removerSwitch();
+      |                 ^~~~~~~~~~~~~
+      |                 compilador::removerSwitch
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:507:10: note: ‘compilador::removerSwitch’ declared here
+  507 |     void removerSwitch() {
+      |          ^~~~~~~~~~~~~
+src/sintatico.y:831:17: error: ‘removerBreakContinue’ was not declared in this scope; did you mean ‘compilador::removerBreakContinue’?
+  831 |                 removerBreakContinue();
+      |                 ^~~~~~~~~~~~~~~~~~~~
+      |                 compilador::removerBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:530:20: note: ‘compilador::removerBreakContinue’ declared here
+  530 |     BreakContinue* removerBreakContinue() {
+      |                    ^~~~~~~~~~~~~~~~~~~~
+src/sintatico.y:838:17: error: ‘Switch’ was not declared in this scope; did you mean ‘compilador::Switch’?
+  838 |                 Switch* sw = topoSwitch();
+      |                 ^~~~~~
+      |                 compilador::Switch
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:323:11: note: ‘compilador::Switch’ declared here
+  323 |     class Switch {
+      |           ^~~~~~
+src/sintatico.y:838:25: error: ‘sw’ was not declared in this scope
+  838 |                 Switch* sw = topoSwitch();
+      |                         ^~
+src/sintatico.y:838:30: error: ‘topoSwitch’ was not declared in this scope; did you mean ‘compilador::topoSwitch’?
+  838 |                 Switch* sw = topoSwitch();
+      |                              ^~~~~~~~~~
+      |                              compilador::topoSwitch
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:503:13: note: ‘compilador::topoSwitch’ declared here
+  503 |     Switch* topoSwitch() {
+      |             ^~~~~~~~~~
+src/sintatico.y:841:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  841 |                         yyerror("Comando case fora de switch");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:845:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  845 |                         yyerror("Tipos incompatíveis no switch-case");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:851:17: error: ‘Switch’ was not declared in this scope; did you mean ‘compilador::Switch’?
+  851 |                 Switch* sw = topoSwitch();
+      |                 ^~~~~~
+      |                 compilador::Switch
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:323:11: note: ‘compilador::Switch’ declared here
+  323 |     class Switch {
+      |           ^~~~~~
+src/sintatico.y:851:25: error: ‘sw’ was not declared in this scope
+  851 |                 Switch* sw = topoSwitch();
+      |                         ^~
+src/sintatico.y:851:30: error: ‘topoSwitch’ was not declared in this scope; did you mean ‘compilador::topoSwitch’?
+  851 |                 Switch* sw = topoSwitch();
+      |                              ^~~~~~~~~~
+      |                              compilador::topoSwitch
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:503:13: note: ‘compilador::topoSwitch’ declared here
+  503 |     Switch* topoSwitch() {
+      |             ^~~~~~~~~~
+src/sintatico.y:854:25: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+  854 |                         yyerror("Comando default fora de switch");
+      |                         ^~~~~~~
+      |                         compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+src/sintatico.y:861:17: error: ‘debug’ was not declared in this scope; did you mean ‘compilador::debug’?
+  861 |                 debug("Iniciando switch-case");
+      |                 ^~~~~
+      |                 compilador::debug
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:54:10: note: ‘compilador::debug’ declared here
+   54 |     void debug(string message) {
+      |          ^~~~~
+src/sintatico.y:863:37: error: ‘gerarLabel’ was not declared in this scope; did you mean ‘compilador::gerarLabel’?
+  863 |                 string breakLabel = gerarLabel();
+      |                                     ^~~~~~~~~~
+      |                                     compilador::gerarLabel
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:77:12: note: ‘compilador::gerarLabel’ declared here
+   77 |     string gerarLabel() {
+      |            ^~~~~~~~~~
+src/sintatico.y:865:17: error: ‘criarSwitch’ was not declared in this scope; did you mean ‘compilador::criarSwitch’?
+  865 |                 criarSwitch($3. label, $3.tipo, breakLabel);
+      |                 ^~~~~~~~~~~
+      |                 compilador::criarSwitch
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:497:13: note: ‘compilador::criarSwitch’ declared here
+  497 |     Switch* criarSwitch(string label, string tipo, string fimLabel) {
+      |             ^~~~~~~~~~~
+src/sintatico.y:866:17: error: ‘adicionarBreakContinue’ was not declared in this scope; did you mean ‘compilador::adicionarBreakContinue’?
+  866 |                 adicionarBreakContinue("", breakLabel);
+      |                 ^~~~~~~~~~~~~~~~~~~~~~
+      |                 compilador::adicionarBreakContinue
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:511:10: note: ‘compilador::adicionarBreakContinue’ declared here
+  511 |     void adicionarBreakContinue(string inicioLabel, string fimLabel) {
+      |          ^~~~~~~~~~~~~~~~~~~~~~
+output/y.tab.c:2630:7: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+ 2630 |       yyerror (YY_("syntax error"));
+      |       ^~~~~~~
+      |       compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+output/y.tab.c:2741:3: error: ‘yyerror’ was not declared in this scope; did you mean ‘compilador::yyerror’?
+ 2741 |   yyerror (YY_("memory exhausted"));
+      |   ^~~~~~~
+      |   compilador::yyerror
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:60:10: note: ‘compilador::yyerror’ declared here
+   60 |     void yyerror(string mensagem, string codigoErro = "Erro de sintaxe") {
+      |          ^~~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l: In function ‘int yylex()’:
+src/lexico.l:29:3: error: ‘adicionarLinha’ was not declared in this scope; did you mean ‘compilador::adicionarLinha’?
+   29 | "\n"                { adicionarLinha();                         }
+      |   ^~~~~~~~~~~~~~~~~~~~~~~~
+      |   compilador::adicionarLinha
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:38:10: note: ‘compilador::adicionarLinha’ declared here
+   38 |     void adicionarLinha() {
+      |          ^~~~~~~~~~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l:74:3: error: ‘yylval’ was not declared in this scope
+   74 | "str"           { yylval.label = "String"; return TK_TIPO;  }
+      |   ^~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l:75:3: error: ‘yylval’ was not declared in this scope
+   75 | "string"        { yylval.label = "String"; return TK_TIPO;  }
+      |   ^~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l:76:3: error: ‘yylval’ was not declared in this scope
+   76 | {TIPOS}         { yylval.label = yytext; return TK_TIPO;    }
+      |   ^~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l:86:3: error: ‘yylval’ was not declared in this scope
+   86 | {CHAR}          { yylval.label = yytext; return TK_CHAR;    }
+      |   ^~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l:87:3: error: ‘yylval’ was not declared in this scope
+   87 | {STRING}        { yylval.label = yytext; return TK_STRING;  }
+      |   ^~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l:88:3: error: ‘yylval’ was not declared in this scope
+   88 | {INTEIRO}               { yylval.label = yytext; return TK_INTEIRO; }
+      |   ^~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l:89:3: error: ‘yylval’ was not declared in this scope
+   89 | {REAL}          { yylval.label = yytext; return TK_REAL;    }
+      |   ^~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l:91:3: error: ‘yylval’ was not declared in this scope
+   91 | "true"          { yylval.label = "true"; return TK_TRUE;    }
+      |   ^~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l:92:3: error: ‘yylval’ was not declared in this scope
+   92 | "false"         { yylval.label = "false"; return TK_FALSE;  }
+      |   ^~~~~~
+In file included from src/sintatico.y:873:
+src/lexico.l:94:3: error: ‘yylval’ was not declared in this scope
+   94 | {ID}                { yylval.label = yytext; return TK_ID;       }
+      |   ^~~~~~~~~~~~~~~~
+src/sintatico.y: In function ‘int main(int, char**)’:
+src/sintatico.y:882:33: error: ‘setDebugMode’ was not declared in this scope; did you mean ‘compilador::setDebugMode’?
+  882 |                                 setDebugMode(true);
+      |                                 ^~~~~~~~~~~~
+      |                                 compilador::setDebugMode
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:46:10: note: ‘compilador::setDebugMode’ declared here
+   46 |     void setDebugMode(bool debug) {
+      |          ^~~~~~~~~~~~
+src/sintatico.y:884:33: error: ‘setSimplified’ was not declared in this scope; did you mean ‘compilador::setSimplified’?
+  884 |                                 setSimplified(true);
+      |                                 ^~~~~~~~~~~~~
+      |                                 compilador::setSimplified
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:50:10: note: ‘compilador::setSimplified’ declared here
+   50 |     void setSimplified(bool simplified) {
+      |          ^~~~~~~~~~~~~
+src/sintatico.y:889:9: error: ‘criarContexto’ was not declared in this scope; did you mean ‘compilador::criarContexto’?
+  889 |         criarContexto();
+      |         ^~~~~~~~~~~~~
+      |         compilador::criarContexto
+In file included from src/sintatico.y:2:
+output/../src/app/compilador.h:481:15: note: ‘compilador::criarContexto’ declared here
+  481 |     Contexto* criarContexto() {
+      |               ^~~~~~~~~~~~~
+make: *** [Makefile:13: compile] Error 1
+output/y.tab.c: In function ‘int yyparse()’:
+output/y.tab.c:2770:18: warning: ‘void free(void*)’ called on unallocated object ‘yyssa’ [-Wfree-nonheap-object]
+ 2770 |     YYSTACK_FREE (yyss);
+output/y.tab.c:1106:16: note: declared here
+ 1106 |     yy_state_t yyssa[YYINITDEPTH];
+      |                ^~~~~

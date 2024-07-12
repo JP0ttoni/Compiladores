@@ -3,13 +3,12 @@
 #include <list>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 
-#include "bison.h"
-
-using namespace bison;
+using namespace std;
 
 #pragma once
-namespace app {
+namespace compilador {
 
     const string STRING_TIPO = "String";
     const string CHAR_TIPO = "char";
@@ -26,6 +25,9 @@ namespace app {
     int contadorLabel = 1;
 
     int contadorLinha = 1;
+
+    vector<string> fatiaString(string str, string del);
+    string formataCodigo(string code);
 
     typedef struct {
         string label;
@@ -706,6 +708,32 @@ namespace app {
 
     bool isNumerico(string tipo) {
         return tipo == INT_TIPO || tipo == FLOAT_TIPO;
+    }
+
+    vector<string> fatiaString(string str, string del) {
+        size_t pos_start = 0, pos_end, delim_len = del.length();
+        string token;
+        vector<string> res;
+
+        while ((pos_end = str.find(del, pos_start)) != string::npos) {
+            token = str.substr (pos_start, pos_end - pos_start);
+            pos_start = pos_end + delim_len;
+            res.push_back (token);
+        }
+
+        res.push_back (str.substr (pos_start));
+        return res;
+    }
+
+    string formataCodigo(string code) {
+        vector<string> lines = fatiaString(code, "\n");
+        string identedCode = "";
+
+        for (int i = 0; i < lines.size(); i++) {
+            identedCode += "\t" + lines[i] + "\n";
+        }
+
+        return identedCode;
     }
 
 }

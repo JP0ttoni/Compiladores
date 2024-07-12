@@ -66,6 +66,11 @@ COMENTARIO "%%".*
 ">="            { return TK_MAIOR_IGUAL;                    }
 "<="            { return TK_MENOR_IGUAL;                    }
 
+"+="            { return TK_MAIS_IGUAL;                     }
+"-="            { return TK_MENOS_IGUAL;                    }
+"*="            { return TK_VEZES_IGUAL;                    }
+"/="            { return TK_DIV_IGUAL;                      }
+
 "str"           { yylval.label = "String"; return TK_TIPO;  }
 "string"        { yylval.label = "String"; return TK_TIPO;  }
 {TIPOS}         { yylval.label = yytext; return TK_TIPO;    }

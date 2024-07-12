@@ -230,14 +230,10 @@ fimWhile:
 
     charPtr[tamanho] = '\0';
 
-    String *string;
+    String string;
 
-    string = (String*) malloc(sizeof(String));
-    string->str = charPtr;
+    string.str = charPtr;
+    string.tamanho = tamanho - 1;
 
-    tamanho--;
-
-    string->tamanho = tamanho;
-
-    return *string;
+    return string;
 }
