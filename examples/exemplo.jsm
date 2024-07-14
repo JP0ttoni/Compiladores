@@ -1,2 +1,1 @@
-var a = 1
-a += 5
+println(false ? 1 : 0)

@@ -24,7 +24,7 @@ int yylex(void);
 
 %start S
 
-%nonassoc TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL 
+%nonassoc TK_IGUAL TK_DIFERENTE TK_MAIOR TK_MENOR TK_MAIOR_IGUAL TK_MENOR_IGUAL '?' ':'
 %nonassoc '+' '-' TK_AND TK_OR
 
 %nonassoc IF
@@ -482,6 +482,27 @@ EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
 		criarVariavel($$.label, $$.label, BOOL_TIPO, true);
 
 		$$.traducao += $$.label + " = " + label1 + " <= " + label2 + ";\n";
+	}
+	| EXPRESSAO '?' EXPRESSAO ':' EXPRESSAO {
+		if ($1.tipo != BOOL_TIPO) {
+			yyerror("Condição do operador ternário deve ser do tipo bool");
+		}
+
+		if ($3.tipo != $5.tipo) {
+			yyerror("Tipos incompatíveis no operador ternário");
+		}
+
+		$$.traducao = $1.traducao + $3.traducao + $5.traducao;
+
+		$$.tipo = $3.tipo;
+		$$.label = gerarTemporaria();
+
+		criarVariavel($$.label, $$.label, $$.tipo, true);
+
+		string ifLabel = gerarLabel();
+		string elseLabel = gerarLabel();
+
+		$$.traducao += "if (" + $1.label + ") goto " + ifLabel + ";\n" + $$.label + " = " + $5.label + ";\n" + "goto " + elseLabel + ";\n" + ifLabel + ":\n" + $$.label + " = " + $3.label + ";\n" + elseLabel + ":\n";
 	}
 
 TERMO : UNARIO { $$ = $1; }
