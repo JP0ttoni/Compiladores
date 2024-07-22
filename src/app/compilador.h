@@ -33,7 +33,13 @@ namespace compilador {
         string label;
         string tipo;
         string traducao;
+        int* dimensoes;
+        int tamanho;        
     } Atributo;
+
+    bool isArray(int* dimensoes) {
+        return dimensoes != NULL;
+    }
 
     void adicionarLinha() {
         contadorLinha++;
@@ -196,11 +202,15 @@ namespace compilador {
             string nome;
             string apelido;
             string tipo;
+            int* dimensoes;
+            int tamanho;
         public:
-            Variavel(string nome, string apelido, string tipo) {
+            Variavel(string nome, string apelido, string tipo, int* dimensoes = NULL, int tamanho = 0) {
                 this->nome = nome;
                 this->apelido = apelido;
                 this->tipo = tipo;
+                this->dimensoes = dimensoes;
+                this->tamanho = tamanho;
             }
 
             string getNome() {
@@ -214,9 +224,246 @@ namespace compilador {
             string getTipo() {
                 return this->tipo;
             }
+
+            bool isArray() {
+                return this->dimensoes != NULL;
+            }
+
+            int* getDimensoes() {
+                return this->dimensoes;
+            }
+
+            int getTamanho() {
+                return this->tamanho;
+            }
     };
 
+    class Label {
+        private:
+            string label;
+            string traducao;
+        public:
+            Label(string label, string traducao) {
+                this->label = label;
+                this->traducao = traducao;
+            }
+
+            string getLabel() {
+                return this->label;
+            }
+
+            string getTraducao() {
+                return this->traducao;
+            }
+    };
+
+    class Array {
+        private:
+            string tipo;
+            list<Label*> labels;
+            list<Array*> childs;
+        public:
+            Array() {
+                this->tipo = "void";
+                this->labels = list<Label*>();
+                this->childs = list<Array*>();
+            }
+
+            void setTipo(string tipo) {
+                this->tipo = tipo;
+            }
+
+            void adicionarLabel(string label, string traducao) {
+                if (this->childs.size() > 0) {
+                    yyerror("Uma nova label foi adicionado em um array de arrays, esperava-se um array de labels.");
+                }
+
+                debug("Adicionando label ao array");
+                this->labels.push_back(new Label(label, traducao));
+            }
+
+            void adicionarChild(Array* child) {
+                if (this->labels.size() > 0) {
+                    yyerror("Uma nova sub-array foi adicionado em uma array de labels, esperava-se um novo elemento.");
+                }
+
+                // verifica se a quantidade de child é igual com os outros
+
+                for (Array* array : this->childs) {
+                    if (array->labels.size() != child->labels.size()) {
+                        yyerror("Uma nova sub-array foi adicionada com quantidade " + to_string(child->labels.size()) + " diferente de " + to_string(array->labels.size()));
+                    } else if (array->childs.size() != child->childs.size()) {
+                        yyerror("Uma nova sub-array foi adicionada com quantidade " + to_string(child->childs.size()) + " diferente de " + to_string(array->childs.size()));
+                    }
+                }
+
+                debug("Adicionando child ao array");
+                this->childs.push_back(child);
+            }
+
+            bool isTipoCompativel(string tipo) {
+                if (this->tipo == "void") {
+                    this->tipo = tipo;
+                    return true;
+                }
+
+                return this->tipo == tipo;
+            }
+
+            string getTipo() {
+                return this->tipo;
+            }
+
+            list<Label*> getLabels() {
+                return this->labels;
+            }
+
+            list<Array*> getChilds() {
+                return this->childs;
+            }
+
+            string getTraducao() {
+                string traducao = "";
+
+                if (this->tipo == "void") {
+                    return traducao;
+                }
+
+                if (this->labels.size() > 0) {
+                    for (Label* label : this->labels) {
+                        traducao += label->getTraducao();
+                    }
+
+                    return traducao;
+                }
+
+                for (Array* child : this->childs) {
+                    traducao += child->getTraducao();
+                }
+
+                return traducao;
+            }
+
+            vector<string> getRealLabels() {
+                vector<string> labels;
+
+                if (this->tipo == "void") {
+                    return labels;
+                }
+
+                if (this->labels.size() > 0) {
+                    for (Label* label : this->labels) {
+                        labels.push_back(label->getLabel());
+                    }
+
+                    return labels;
+                }
+
+                for (Array* child : this->childs) {
+                    for (string label : child->getRealLabels()) {
+                        labels.push_back(label);
+                    }
+                }
+
+                return labels;
+            }
+
+            int getTamanhoTotal() {
+                if (this->tipo == "void") {
+                    return 0;
+                }
+
+                if (this->labels.size() > 0) {
+                    return this->labels.size();
+                }
+
+                return this->childs.size() * this->childs.front()->getTamanhoTotal();
+            }
+
+            int getAlturaMaxima() {
+                if (this->tipo == "void") {
+                    return 0;
+                }
+
+                if (this->labels.size() > 0) {
+                    return 1;
+                }
+
+                return this->childs.front()->getAlturaMaxima() + 1;
+            }
+
+            /**
+             * Retorna o tamanho das dimensões do array, sendo cada elemento do array o tamanho de uma dimensão
+             * 
+             * @example Em um array [[1,2,3], [1,2,3]] o retorno seria [2,3]
+             * @example Em um array [[1,2,3], [[1,2,3], [1,2,3]]] o retorno seria [2,2,3]
+             * @example Em um array [[1,2,3], [[1,2,3], [1,2,3], [1,2,3]]] o retorno seria [2,3,3]
+             * 
+             * @return int* - Array de inteiros com o tamanho das dimensões
+             */
+
+            pair<int*, int> getTamanhoDimensoes() {
+                pair<int*, int> result;
+
+                result.first = new int[getAlturaMaxima()];
+                result.second = 0;
+
+                if (this->childs.size() > 0) {
+                    result.first[result.second++] = this->childs.size();
+                    list<Array*> pilhaChilds;
+
+                    pilhaChilds.push_back(this->childs.front());
+
+                    while (pilhaChilds.size() > 0) {
+                        Array* child = pilhaChilds.front();
+                        pilhaChilds.pop_front();
+
+                        if (child->getTipo() == "void") {
+                            result.first[result.second++] = 0;
+                            return result;
+                        }
+
+                        if (child->labels.size() > 0) {
+                            result.first[result.second++] = child->labels.size();
+                            break;
+                        }
+
+                        result.first[result.second++] = child->childs.size();
+                        Array* firstChildOfChild = child->childs.front();
+                        pilhaChilds.push_back(firstChildOfChild);
+                    }
+                } else {
+                    result.first[result.second++] = this->labels.size();
+                }
+
+                return result;
+            }
+    };
+
+    list<Array*> pilhaArrays;
+
+    Array* criarArray() {
+        Array *array = new Array();
+        pilhaArrays.push_back(array);
+        return array;        
+    }
+
+    Array* topoArray() {
+        return pilhaArrays.back();
+    }
+
+    int getPilhaArraySize() {
+        return pilhaArrays.size();
+    }
+
+    Array* removerArray() {
+        Array *array = pilhaArrays.back();
+        pilhaArrays.pop_back();
+        return array;
+    }
+
     Variavel* criarVariavel(string nome, string apelido, string tipo, bool temporaria = false);
+    Variavel* criarArray(string nome, string apelido, string tipo, bool temporaria = false, int* dimensoes = NULL, int tamanho = 0);
 
     class Contexto {
         private:
@@ -235,6 +482,16 @@ namespace compilador {
                 return this->hasLastReturn;
             }
 
+            bool hasVariavel(string apelido) {
+                for (list<Variavel*>::iterator it = this->variaveis.begin(); it != this->variaveis.end(); ++it) {
+                    if ((*it)->getApelido() == apelido) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+
             /**
              * Cria uma variável na tabela de símbolos
              * 
@@ -246,15 +503,36 @@ namespace compilador {
              */
 
             Variavel* criarVariavel(string nome, string apelido, string tipo) {
-                for (list<Variavel*>::iterator it = this->variaveis.begin(); it != this->variaveis.end(); ++it) {
-                    if ((*it)->getApelido() == apelido) {
-                        yyerror("Variável " + apelido + " já foi declarada");
-                    }
+                if (hasVariavel(apelido)) {
+                    yyerror("Variável " + apelido + " já foi declarada");
                 }
 
                 debug("Criando variável " + nome + " do tipo " + tipo + " com apelido " + apelido);
 
                 Variavel *variavel = new Variavel(nome, apelido, tipo);
+                this->variaveis.push_back(variavel);
+                return variavel;
+            }
+
+            /**
+             * Criar uma variável do tipo array
+             * 
+             * @param nome - Nome da variável
+             * @param apelido - Apelido da variável
+             * @param tipo - Tipo da variável
+             * @param dimensoes - Dimensões do array
+             * 
+             * @return Variavel - Ponteiro para a variável criada
+             */
+
+            Variavel* criarArray(string nome, string apelido, string tipo, int* dimensoes, int tamanho) {
+                if (hasVariavel(apelido)) {
+                    yyerror("Variável " + apelido + " já foi declarada");
+                }
+
+                debug("Criando array " + nome + " do tipo " + tipo + " com apelido " + apelido + " e tamanho " + to_string(tamanho));
+
+                Variavel *variavel = new Variavel(nome, apelido, tipo, dimensoes, tamanho);
                 this->variaveis.push_back(variavel);
                 return variavel;
             }
@@ -267,9 +545,11 @@ namespace compilador {
              * @return Variavel - Ponteiro para a variável encontrada
              */
 
-            Variavel* buscarVariavel(string apelido) {
+            Variavel* buscarVariavel(string apelido, bool porApelido = false) {
                 for (list<Variavel*>::iterator it = this->variaveis.begin(); it != this->variaveis.end(); ++it) {
                     if ((*it)->getApelido() == apelido) {
+                        return *it;
+                    } else if (porApelido && (*it)->getApelido() == "#" + apelido) {
                         return *it;
                     }
                 }
@@ -553,7 +833,11 @@ namespace compilador {
         string traducao = "/* Variáveis */\n\n";
         
         for (Variavel *variavel : tabelaSimbolosVariaveis) {
-            traducao += variavel->getTipo() + " " + variavel->getNome() + ";\n";
+            if (variavel->isArray()) {
+                traducao += variavel->getTipo() + "* " + variavel->getNome() + ";\n";
+            } else {
+                traducao += variavel->getTipo() + " " + variavel->getNome() + ";\n";
+            }
         }
 
         for (Funcao *funcao : tabelaSimbolosFuncoes) {
@@ -606,6 +890,63 @@ namespace compilador {
     }
 
     /**
+     * Criar uma variável do tipo array
+     * 
+     * @param nome - Nome da variável
+     * @param apelido - Apelido da variável
+     * @param tipo - Tipo da variável
+     * @param dimensoes - Dimensões do array
+     * 
+     * @return Variavel - Ponteiro para a variável criada
+     */
+
+    Variavel* criarArray(string nome, string apelido, string tipo, bool temporaria, int* dimensoes, int tamanho) {
+        string apelidoReal = temporaria ? "#" + apelido : apelido;
+        Contexto* contexto = pilhaContextos.back();
+        Variavel* variavel = contexto->criarArray(nome, apelidoReal, tipo, dimensoes, tamanho);
+        tabelaSimbolosVariaveis.push_back(variavel);
+        return variavel;
+    }
+
+    /**
+     * Dado um array de dimensões e um array de índices, retorna o índice do array
+     * 
+     * @param dimensoes - Array de dimensões
+     * @param indices - Array de índices
+     * @param n - Tamanho dos arrays de dimensões e índices
+     * 
+     * @return int - Índice do array
+     */
+
+    int calcularPosicaoArray(int* dimensoes, int* indices, int n) {
+        int index = 0;
+        int multiplicador = 1;
+
+        for (int i = n - 1; i >= 0; i--) {
+            index += multiplicador * indices[i];
+            multiplicador *= dimensoes[i];
+        }
+
+        // calcula o tamanho total
+
+        int tamanhoTotal = 1;
+
+        for (int i = 0; i < n; i++) {
+            tamanhoTotal *= dimensoes[i];
+        }
+
+        if (index < 0) {
+            yyerror("índice do array fora da faixa (valor mínimo: 0)");
+        }
+
+        if (index >= tamanhoTotal) {
+            yyerror("Índice do array fora da faixa (valor máximo: " + to_string(tamanhoTotal) + ")");
+        }
+
+        return index;
+    }
+
+    /**
      * Busca uma variável na tabela de símbolos pelo apelido
      * 
      * @param apelido - Apelido da variável
@@ -613,7 +954,7 @@ namespace compilador {
      * @return Variavel - Ponteiro para a variável encontrada
      */
 
-    Variavel* buscarVariavel(string apelido) {
+    Variavel* buscarVariavel(string apelido, bool porApelido = false) {
         Funcao* funcao = getFuncaoDefinindo();
 
         if (funcao != NULL) {
@@ -626,7 +967,7 @@ namespace compilador {
         }
 
         for (list<Contexto*>::reverse_iterator it = pilhaContextos.rbegin(); it != pilhaContextos.rend(); ++it) {
-            Variavel *variavel = (*it)->buscarVariavel(apelido);
+            Variavel *variavel = (*it)->buscarVariavel(apelido, porApelido);
 
             if (variavel != NULL) {
                 return variavel;
@@ -667,40 +1008,46 @@ namespace compilador {
         Variavel *var = criarVariavel(label, label, tipoDestino, true);
         debug("Convertendo " + atributo.label + " de " + atributo.tipo + " para " + tipoDestino);
 
-        if (atributo.tipo == INT_TIPO) {
-            if (tipoDestino == FLOAT_TIPO) {
-                translation += label + " = " + "(float) " + atributo.label + ";\n";
-            } else if (tipoDestino == BOOL_TIPO) {
-                translation += label + " = " + atributo.label + " != 0;\n";
-            } else if (tipoDestino == STRING_TIPO) {
-                translation += label + " = intToString(" + atributo.label + ");\n";
-            } else {
-                yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
-            }
-        } else if (atributo.tipo == FLOAT_TIPO) {
-            if (tipoDestino == INT_TIPO) {
-                translation += label + " = " + "(int) " + atributo.label + ";\n";
-            } else if (tipoDestino == BOOL_TIPO) {
-                translation += label + " = " + atributo.label + " != 0.0;\n";
-            } else if (tipoDestino == STRING_TIPO) {
-                translation += label + " = floatToString(" + atributo.label + ");\n";
-            } else {
-                yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
-            }
-        } else if (atributo.tipo == BOOL_TIPO) {
-            if (tipoDestino == STRING_TIPO) {
-                translation += label + " = boolToString(" + atributo.label + ");\n";
-            } else {
-                yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
-            }
-        } else if (atributo.tipo == CHAR_TIPO) {
-            if (tipoDestino == STRING_TIPO) {
-                translation += label + " = charToString(" + atributo.label + ");\n";
+        cout << "Tamanho: " << atributo.tamanho << endl;
+
+        if (atributo.tamanho == 0) {
+            if (atributo.tipo == INT_TIPO) {
+                if (tipoDestino == FLOAT_TIPO) {
+                    translation += label + " = " + "(float) " + atributo.label + ";\n";
+                } else if (tipoDestino == BOOL_TIPO) {
+                    translation += label + " = " + atributo.label + " != 0;\n";
+                } else if (tipoDestino == STRING_TIPO) {
+                    translation += label + " = intToString(" + atributo.label + ");\n";
+                } else {
+                    yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
+                }
+            } else if (atributo.tipo == FLOAT_TIPO) {
+                if (tipoDestino == INT_TIPO) {
+                    translation += label + " = " + "(int) " + atributo.label + ";\n";
+                } else if (tipoDestino == BOOL_TIPO) {
+                    translation += label + " = " + atributo.label + " != 0.0;\n";
+                } else if (tipoDestino == STRING_TIPO) {
+                    translation += label + " = floatToString(" + atributo.label + ");\n";
+                } else {
+                    yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
+                }
+            } else if (atributo.tipo == BOOL_TIPO) {
+                if (tipoDestino == STRING_TIPO) {
+                    translation += label + " = boolToString(" + atributo.label + ");\n";
+                } else {
+                    yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
+                }
+            } else if (atributo.tipo == CHAR_TIPO) {
+                if (tipoDestino == STRING_TIPO) {
+                    translation += label + " = charToString(" + atributo.label + ");\n";
+                } else {
+                    yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
+                }
             } else {
                 yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
             }
         } else {
-            yyerror("Conversão de " + atributo.tipo + " para " + tipoDestino + " não suportada");
+            yyerror("Conversão de arrays não suportada");
         }
 
         return label;

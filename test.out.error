@@ -1,0 +1,13 @@
+output/y.tab.c: In function ‘int yyparse()’:
+output/y.tab.c:3006:18: warning: ‘void free(void*)’ called on unallocated object ‘yyssa’ [-Wfree-nonheap-object]
+ 3006 |     YYSTACK_FREE (yyss);
+output/y.tab.c:1141:16: note: declared here
+ 1141 |     yy_state_t yyssa[YYINITDEPTH];
+      |                ^~~~~
+output/exemplo.c: In function ‘int main()’:
+output/exemplo.c:120:14: error: invalid conversion from ‘int*’ to ‘int’ [-fpermissive]
+  120 |         v1 = t28;
+      |              ^~~
+      |              |
+      |              int*
+make: *** [Makefile:17: run] Error 1

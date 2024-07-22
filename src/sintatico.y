@@ -201,7 +201,14 @@ DECLARACAO_VARIAVEL: TK_VAR TK_ID '=' EXPRESSAO {
 		yyerror("A variável " + $2.label + " está recebendo uma expressão do tipo void...");
 	}
 
-	criarVariavel($$.label, $2.label, $4.tipo);
+	$$.dimensoes = $4.dimensoes;
+	$$.tamanho = $4.tamanho;
+
+	if ($$.tamanho > 0) {
+		criarArray($$.label, $2.label, $$.tipo, false, $$.dimensoes, $$.tamanho);
+	} else {
+		criarVariavel($$.label, $2.label, $4.tipo);
+	}
 
 	$$.traducao = $4.traducao;
 
@@ -257,6 +264,8 @@ ATRIBUICAO: TK_ID '=' EXPRESSAO {
 		atributo.tipo = var->getTipo();
 		atributo.label = var->getNome();
 		atributo.traducao = "";
+		atributo.dimensoes = var->getDimensoes();
+		atributo.tamanho = var->getTamanho();
 
 		string label1 = converter(atributo, $$.tipo, $$.traducao);
 		string label2 = converter($3, $$.tipo, $$.traducao);
@@ -285,6 +294,8 @@ ATRIBUICAO: TK_ID '=' EXPRESSAO {
 		atributo.tipo = var->getTipo();
 		atributo.label = var->getNome();
 		atributo.traducao = "";
+		atributo.dimensoes = var->getDimensoes();
+		atributo.tamanho = var->getTamanho();
 
 		string label1 = converter(atributo, $$.tipo, $$.traducao);
 		string label2 = converter($3, $$.tipo, $$.traducao);
@@ -292,7 +303,7 @@ ATRIBUICAO: TK_ID '=' EXPRESSAO {
 		$$.traducao += $$.label + " = " + label1 + " - " + label2 + ";\n";
 	}
 
-EXPRESSAO : TERMO { $$.traducao = $1.traducao; }
+EXPRESSAO : TERMO { $$ = $1; }
 	| EXPRESSAO '+' TERMO {
 		if (isNumerico($1.tipo) && isNumerico($3.tipo)) {
 			$$.traducao = $1.traducao + $3.traducao;
@@ -645,6 +656,9 @@ PRIMARIO : PRIMITIVO {
 			$$.traducao = $$.label + " = " + $1.label + ";\n";
 		}
  	}
+	| ARRAY {
+		$$ = $1;
+	}
 	| FUNCTIONS {
 		$$.label = $1.label;
 		$$.tipo = $1.tipo;
@@ -652,9 +666,46 @@ PRIMARIO : PRIMITIVO {
 	}
 	| '(' EXPRESSAO ')' {
 		debug("Expressão entre parênteses");
+
 		$$.tipo = $2.tipo;
 		$$.label = $2.label;
 		$$.traducao = $2.traducao;
+		$$.dimensoes = $2.dimensoes;
+		$$.tamanho = $2.tamanho;
+	}
+	| TK_ID ARRAY_SELECTOR {
+		Variavel *var = buscarVariavel($1.label);
+
+		if (var == NULL) {
+			yyerror("Variável " + $1.label + " não declarada");
+		}
+
+		if (var->getTipo() == "void") {
+			yyerror("Variável " + $1.label + " não pode ser usada como expressão");
+		}
+
+		if (var->getTamanho() == 0) {
+			yyerror("Variável " + $1.label + " não é um array");
+		}
+
+		int* realDimensoes = var->getDimensoes();
+
+		vector<string> arraySelectorDimensoes = fatiaString($2.label, ", ");
+
+		if (arraySelectorDimensoes.size() != var->getTamanho()) {
+			yyerror("Número de dimensões do array " + $1.label + " não corresponde ao número de dimensões informado");
+		}
+
+		int* dimensoes = (int*) malloc(sizeof(int) * var->getTamanho());
+
+		for (int i = 0; i < var->getTamanho(); i++) {
+			dimensoes[i] = stoi(arraySelectorDimensoes[i]);
+		}
+
+		int posicao = calcularPosicaoArray(realDimensoes, dimensoes, var->getTamanho());
+
+		$$.label = var->getNome() + "[" + to_string(posicao) + "]";
+		$$.tipo = var->getTipo();
 	}
 	| TK_ID {
 		Variavel *var = buscarVariavel($1.label);
@@ -669,6 +720,29 @@ PRIMARIO : PRIMITIVO {
 
 		$$.label = var->getNome();
 		$$.tipo = var->getTipo();
+		$$.dimensoes = var->getDimensoes();
+		$$.tamanho = var->getTamanho();
+	}
+
+ARRAY_SELECTOR : '[' PRIMITIVO ']' {
+		if ($2.tipo != INT_TIPO) {
+			yyerror("Índice de array deve ser do tipo inteiro");
+		}
+
+		debug("Seleção de array");
+
+		$$.label = $2.label;
+		$$.tipo = INT_TIPO;
+	}
+	| ARRAY_SELECTOR '[' PRIMITIVO ']' {
+		if ($3.tipo != INT_TIPO) {
+			yyerror("Índice de array deve ser do tipo inteiro");
+		}
+
+		debug("Seleção de array");
+
+		$$.label = $1.label + ", " + $3.label;
+		$$.tipo = INT_TIPO;
 	}
 
 PRIMITIVO: TK_INTEIRO {
@@ -706,6 +780,76 @@ PRIMITIVO: TK_INTEIRO {
 
 		$$.label = $1.label;
 		$$.tipo = BOOL_TIPO;
+	}
+
+INICIAR_ARRAY : '[' {
+		debug("Iniciando array");
+		criarArray();
+	}
+
+FINALIZAR_ARRAY : ']' {
+		Array* topo = removerArray();
+
+		if (getPilhaArraySize() > 0) {
+			Array* top = topoArray();
+
+			top->adicionarChild(topo);
+			top->setTipo(topo->getTipo());
+
+			$$.label = "Ignore";
+		} else {
+			int tamanhoTotal = topo->getTamanhoTotal();
+			pair<int*, int> dimensoes = topo->getTamanhoDimensoes();
+
+			debug("Criado uma array de tamanho total " + to_string(tamanhoTotal) + ", com " + to_string(dimensoes.second) + " dimensões");
+
+			$$.label = gerarTemporaria();
+			$$.tipo = topo->getTipo();
+			$$.dimensoes = dimensoes.first;
+			$$.tamanho = dimensoes.second;
+
+			criarArray($$.label, $$.label, $$.tipo, true, dimensoes.first, dimensoes.second);
+			
+			$$.traducao = topo->getTraducao();
+			$$.traducao += $$.label + " = (" + $$.tipo + "*) malloc(sizeof(" + $$.tipo + ") * " + to_string(tamanhoTotal) + ");\n";
+
+			vector<string> labels = topo->getRealLabels();
+
+			for (int i = 0; i < labels.size(); i++) {
+				$$.traducao += $$.label + "[" + to_string(i) + "] = " + labels[i] + ";\n";
+			}
+		}
+ 	}
+
+ARRAY : INICIAR_ARRAY ARRAY_ELEMENTS_NULLABLE FINALIZAR_ARRAY {
+		$$ = $3;
+	}
+
+ARRAY_ELEMENTS_NULLABLE : ARRAY_ELEMENTS {} | {}
+
+ARRAY_ELEMENTS : EXPRESSAO {
+		if ($1.label != "Ignore") {
+			Array* topo = topoArray();
+
+			if (!topo->isTipoCompativel($1.tipo)) {
+				yyerror("Tipo incompatível no array");
+			}
+
+			topo->adicionarLabel($1.label, $1.traducao);
+			topo->setTipo($1.tipo);
+		}
+	}
+	| ARRAY_ELEMENTS ',' EXPRESSAO {
+		if ($3.label != "Ignore") {
+			Array* topo = topoArray();
+
+			if (!topo->isTipoCompativel($3.tipo)) {
+				yyerror("Tipo incompatível no array");
+			}
+
+			topo->adicionarLabel($3.label, $3.traducao);
+			topo->setTipo($1.tipo);
+		}
 	}
 
 RETORNO_FUNCAO: TK_RETURN EXPRESSAO {
@@ -841,6 +985,10 @@ ARGUMENTOS: ARGUMENTOS ',' EXPRESSAO {
 		$$.label = $1.label + ", " + $3.label + ":" + $3.tipo;
 	}
 	| EXPRESSAO { 
+		if ($1.tamanho > 0) {
+			yyerror("Argumento de função não pode ser um array");
+		}
+		
 		$$.traducao = $1.traducao; $$.label = $1.label + ":" + $1.tipo;
 	}
 	| { $$.traducao = ""; }
