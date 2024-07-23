@@ -212,7 +212,7 @@ DECLARACAO_VARIAVEL: TK_VAR TK_ID '=' EXPRESSAO {
 
 	$$.traducao = $4.traducao;
 
-	if ($4.tipo == STRING_TIPO) {
+	if ($4.tipo == STRING_TIPO && $$.tamanho == 0) {
 		$$.traducao += $$.label + " = copiarString(" + $4.label + ");\n";
 	} else {
 		$$.traducao +=  $$.label + " = " + $4.label + ";\n";
@@ -236,7 +236,7 @@ ATRIBUICAO: TK_ID '=' EXPRESSAO {
 		$$.label = var->getNome();
 		$$.traducao = $3.traducao;
 
-		if ($3.tipo == STRING_TIPO) {
+		if ($3.tipo == STRING_TIPO && $$.tamanho == 0) {
 			$$.traducao += $$.label + " = copiarString(" + $3.label + ");\n";
 		} else {
 			$$.traducao += $$.label + " = " + $3.label + ";\n";
@@ -816,7 +816,11 @@ FINALIZAR_ARRAY : ']' {
 			vector<string> labels = topo->getRealLabels();
 
 			for (int i = 0; i < labels.size(); i++) {
-				$$.traducao += $$.label + "[" + to_string(i) + "] = " + labels[i] + ";\n";
+				if ($$.tipo == STRING_TIPO) {
+					$$.traducao += $$.label + "[" + to_string(i) + "] = copiarString(" + labels[i] + ");\n";
+				} else {
+					$$.traducao += $$.label + "[" + to_string(i) + "] = " + labels[i] + ";\n";
+				}
 			}
 		}
  	}
