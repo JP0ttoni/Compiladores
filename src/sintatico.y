@@ -242,6 +242,45 @@ ATRIBUICAO: TK_ID '=' EXPRESSAO {
 			$$.traducao += $$.label + " = " + $3.label + ";\n";
 		} 
 	}
+	| TK_ID ARRAY_SELECTOR '=' EXPRESSAO {
+		debug("Atribuindo valor à variável " + $1.label);
+
+		Variavel *var = buscarVariavel($1.label);
+
+		if (var == NULL) {
+			yyerror("Variável " + $1.label + " não declarada");
+		}
+
+		if (var->getTipo() != $4.tipo) {
+			yyerror("Tipos incompatíveis na atribuição");
+		}
+
+		int* realDimensoes = var->getDimensoes();
+
+		vector<string> arraySelectorDimensoes = fatiaString($2.label, ", ");
+
+		if (arraySelectorDimensoes.size() != var->getTamanho()) {
+			yyerror("Número de dimensões do array " + $1.label + " não corresponde ao número de dimensões informado");
+		}
+
+		int* dimensoes = (int*) malloc(sizeof(int) * var->getTamanho());
+
+		for (int i = 0; i < var->getTamanho(); i++) {
+			dimensoes[i] = stoi(arraySelectorDimensoes[i]);
+		}
+
+		int posicao = calcularPosicaoArray(realDimensoes, dimensoes, var->getTamanho());
+
+		$$.label = var->getNome() + "[" + to_string(posicao) + "]";
+		$$.tipo = var->getTipo();
+		$$.traducao = $4.traducao;
+
+		if ($4.tipo == STRING_TIPO) {
+			$$.traducao += $$.label + " = copiarString(" + $4.label + ");\n";
+		} else {
+			$$.traducao += $$.label + " = " + $4.label + ";\n";
+		}
+	}
 	| TK_ID TK_MAIS_IGUAL EXPRESSAO {
 		debug("Atribuição de soma à variável " + $1.label);
 

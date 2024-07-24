@@ -1008,8 +1008,6 @@ namespace compilador {
         Variavel *var = criarVariavel(label, label, tipoDestino, true);
         debug("Convertendo " + atributo.label + " de " + atributo.tipo + " para " + tipoDestino);
 
-        cout << "Tamanho: " << atributo.tamanho << endl;
-
         if (atributo.tamanho == 0) {
             if (atributo.tipo == INT_TIPO) {
                 if (tipoDestino == FLOAT_TIPO) {
